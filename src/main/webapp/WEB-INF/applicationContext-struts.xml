@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd"
+       default-lazy-init="true">
+
+    <bean id="adminInterceptor" class="com.yfkey.webapp.interceptor.UserRoleAuthorizationInterceptor">
+        <property name="authorizedRoles" value="ROLE_ADMIN"/>
+    </bean>
+    
+    <bean id="accessDeniedInterceptor" class="com.yfkey.webapp.interceptor.AccessDeniedInterceptor" />
+    <bean id="plantNotSelectedInterceptor" class="com.yfkey.webapp.interceptor.NoPlantSelectedInterceptor" />
+
+    <bean id="userAction" class="com.yfkey.webapp.action.UserAction" scope="prototype">
+        <property name="userManager" ref="userManager"/>
+        <property name="universalManager" ref="universalManager"/>
+        <property name="passwordEncoder" ref="passwordEncoder"/>
+    </bean>
+    
+    <bean id="roleAction" class="com.yfkey.webapp.action.RoleAction" scope="prototype">
+        <property name="roleManager" ref="roleManager"/>
+        <property name="universalManager" ref="universalManager"/>
+    </bean>
+    <bean id="purchaseOrderAction" class="com.yfkey.webapp.action.PurchaseOrderAction"
+		scope="prototype">
+		<property name="universalManager" ref="universalManager" />
+	</bean>
+	<bean id="asnAction" class="com.yfkey.webapp.action.AsnAction"
+		scope="prototype">
+		<property name="universalManager" ref="universalManager" />
+	</bean>
+	<bean id="barcodeAction" class="com.yfkey.webapp.action.BarcodeAction"
+		scope="prototype">
+		<property name="universalManager" ref="universalManager" />
+	</bean>
+	<bean id="receiptAction" class="com.yfkey.webapp.action.ReceiptAction"
+		scope="prototype">
+		<property name="universalManager" ref="universalManager" />
+	</bean>
+	<bean id="billAction" class="com.yfkey.webapp.action.BillAction"
+		scope="prototype">
+		<property name="universalManager" ref="universalManager" />
+	</bean>
+	<bean id="fileUploadAction" class="com.yfkey.webapp.action.FileUploadAction"
+		scope="prototype">
+	</bean>
+</beans>
