@@ -1,12 +1,12 @@
 package com.yfkey.exception;
 
-public class ShipQtyNotValidException extends Exception {
+public class ShipNotValidException extends Exception {
 	 /**
 	 * 
 	 */
 	private static final long serialVersionUID = -858187167344741414L;
 
-	public ShipQtyNotValidException(final String message) {
+	public ShipNotValidException(final String message) {
 	        super(message);
 	    }
 }

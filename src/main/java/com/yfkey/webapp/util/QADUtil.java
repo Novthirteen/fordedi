@@ -4,23 +4,23 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.progress.open4gl.Parameter;
 import com.progress.open4gl.ProDataObject;
 import com.yfkey.Constants;
-import com.yfkey.model.Asn;
-import com.yfkey.model.AsnDetail;
-import com.yfkey.model.Barcode;
-import com.yfkey.model.Bill;
-import com.yfkey.model.BillDetail;
+import com.yfkey.model.Edi;
+import com.yfkey.model.EdiDetail;
 import com.yfkey.model.Gender;
 import com.yfkey.model.LabelValue;
-import com.yfkey.model.PurchaseOrder;
-import com.yfkey.model.PurchaseOrderDetail;
-import com.yfkey.model.Receipt;
-import com.yfkey.model.ReceiptDetail;
-
+import com.yfkey.model.ScheduleBody;
+import com.yfkey.model.ScheduleHead;
+import com.yfkey.model.ScheduleView;
+import com.yfkey.model.ShipDetail;
+import com.yfkey.model.ShipSummary;
 import com.opensymphony.xwork2.ActionSupport;
 import org.apache.struts2.ServletActionContext;
 
@@ -39,557 +39,157 @@ public final class QADUtil {
 	private QADUtil() {
 	}
 
-	/**
-	 * @param proDataObjectList
-	 * @return 要货单转换
-	 */
-	public static List<PurchaseOrder> ConverToPurchaseOrder(List<ProDataObject> proDataObjectList) {
-
-		List<PurchaseOrder> purchaseOrderList = new ArrayList<PurchaseOrder>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1; // qad的序号让我们自动生成
-			for (ProDataObject o : proDataObjectList) {
-				PurchaseOrder po = new PurchaseOrder();
-				po.setTt_xpyhmstro_seq(i);
-				po.setTt_xpyhmstro_yhdnbr(o.getString("tt_xpyhmstro_yhdnbr"));
-				po.setTt_xpyhmstro_suppcode(o.getString("tt_xpyhmstro_suppcode"));
-				po.setTt_xpyhmstro_shipto(o.getString("tt_xpyhmstro_shipto"));
-				po.setTt_xpyhmstro_startdt(o.getString("tt_xpyhmstro_startdt"));
-				po.setTt_xpyhmstro_receptdt(o.getString("tt_xpyhmstro_receptdt"));
-				po.setTt_xpyhmstro_stat(o.getString("tt_xpyhmstro_stat"));
-				po.setTt_xpyhmstro_priority(o.getString("tt_xpyhmstro_priority"));
-				po.setTt_xpyhmstro_creator(o.getString("tt_xpyhmstro_creator"));
-				po.setTt_xpyhmstro_xpyhmstroid(o.getString("tt_xpyhmstro_xpyhmstroid"));
-				po.setTt_xpyhmstro_conf(o.getString("tt_xpyhmstro_conf"));
-				po.setTt_xpyhmstro_print(o.getString("tt_xpyhmstro_print"));
-				po.setTt_xpyhmstro_recepttm(o.getString("tt_xpyhmstro_recepttm"));
-
-				purchaseOrderList.add(po);
-				i++;
-			}
-		}
-		return purchaseOrderList;
-	}
-
-	public static List<PurchaseOrderDetail> ConvertToPurchaseOrderDetail(List<ProDataObject> proDataObjectList) {
-		List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-				PurchaseOrderDetail pod = new PurchaseOrderDetail();
-				pod.setTt_xpyhddeto_seq(i);
-				pod.setTt_xpyhddeto_yhdnbr(o.getString("tt_xpyhddeto_yhdnbr"));
-				pod.setTt_xpyhddeto_partnbr(o.getString("tt_xpyhddeto_partnbr"));
-				pod.setTt_xpyhddeto_partdesc(o.getString("tt_xpyhddeto_partdesc"));
-				pod.setTt_xpyhddeto_supppart(o.getString("tt_xpyhddeto_supppart"));
-				pod.setTt_xpyhddeto_suppcode(o.getString("tt_xpyhddeto_suppcode"));
-				pod.setTt_xpyhddeto_shipto(o.getString("tt_xpyhddeto_shipto"));
-				pod.setTt_xpyhddeto_startdt(o.getString("tt_xpyhddeto_startdt"));
-				pod.setTt_xpyhddeto_receptdt(o.getString("tt_xpyhddeto_receptdt"));
-				pod.setTt_xpyhddeto_currcy(o.getString("tt_xpyhddeto_currcy"));
-
-				pod.setTt_xpyhddeto_uom(o.getString("tt_xpyhddeto_uom"));
-				pod.setTt_xpyhddeto_spq(o.getBigDecimal("tt_xpyhddeto_spq"));
-				pod.setTt_xpyhddeto_reqqty(o.getBigDecimal("tt_xpyhddeto_reqqty"));
-				pod.setTt_xpyhddeto_ordqty(o.getBigDecimal("tt_xpyhddeto_ordqty"));
-				pod.setTt_xpyhddeto_stat(o.getString("tt_xpyhddeto_stat"));
-				pod.setTt_xpyhddeto_priority(o.getString("tt_xpyhddeto_priority"));
-				pod.setTt_xpyhdde_creator(o.getString("tt_xpyhddeto_creator"));
-				pod.setTt_xpyhddeto_xpyhmstroid(o.getString("tt_xpyhddeto_xpyhmstroid"));
-				pod.setTt_xpyhddeto_xpyhddetoid(o.getString("tt_xpyhddeto_xpyhddetoid"));
-				purchaseOrderDetailList.add(pod);
-				i++;
-			}
-		}
-		return purchaseOrderDetailList;
-
-	}
-
-	public static List<Object> ConvertToPurchaseOrderAndDetail(List<ProDataObject> proDataObjectList) {
-		PurchaseOrder po = new PurchaseOrder();
-		List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>();
-		List<Object> poList = new ArrayList<Object>();
-
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			ProDataObject poDataObject = proDataObjectList.get(0);
-			po.setTt_xpyhmstro_yhdnbr(poDataObject.getString("tt_xpyhddeto_yhdnbr"));
-			po.setTt_xpyhmstro_priority(poDataObject.getString("tt_xpyhddeto_priority"));
-			po.setTt_xpyhmstro_startdt(poDataObject.getString("tt_xpyhddeto_startdt"));
-			po.setTt_xpyhmstro_recepttm(poDataObject.getString("tt_xpyhddeto_recepttm"));
-			po.setTt_xpyhmstro_receptdt(poDataObject.getString("tt_xpyhddeto_receptdt"));
-			po.setTt_xpyhmstro_suppcode(poDataObject.getString("tt_xpyhddeto_suppcode"));
-			po.setTt_xpyhmstro_suppname(poDataObject.getString("tt_xpyhddeto_suppname"));
-			po.setTt_xpyhmstro_currcy(poDataObject.getString("tt_xpyhddeto_currcy"));
-			po.setTt_xpyhmstro_shipto(poDataObject.getString("tt_xpyhddeto_shipto"));
-			po.setTt_xpyhmstro_stat(poDataObject.getString("tt_xpyhddeto_stat"));
-			po.setRemark(poDataObject.getString("tt_xpyhddeto_remark"));
-			po.setTt_xpyhmstro_xpyhmstroid(poDataObject.getString("tt_xpyhddeto_xpyhmstroid"));
-			po.setTt_xpyhmstro_recepttm(poDataObject.getString("tt_xpyhddeto_recepttm"));
-			poList.add(po);
-
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-				PurchaseOrderDetail pod = new PurchaseOrderDetail();
-				pod.setTt_xpyhddeto_seq(i);
-				pod.setTt_xpyhddeto_yhdnbr(o.getString("tt_xpyhddeto_yhdnbr"));
-				pod.setTt_xpyhddeto_partnbr(o.getString("tt_xpyhddeto_partnbr"));
-				pod.setTt_xpyhddeto_partdesc(o.getString("tt_xpyhddeto_partdesc"));
-				pod.setTt_xpyhddeto_supppart(o.getString("tt_xpyhddeto_supppart"));
-				pod.setTt_xpyhddeto_suppcode(o.getString("tt_xpyhddeto_suppcode"));
-				pod.setTt_xpyhddeto_shipto(o.getString("tt_xpyhddeto_shipto"));
-				pod.setTt_xpyhddeto_startdt(o.getString("tt_xpyhddeto_startdt"));
-				pod.setTt_xpyhddeto_receptdt(o.getString("tt_xpyhddeto_receptdt"));
-				pod.setTt_xpyhddeto_currcy(o.getString("tt_xpyhddeto_currcy"));
-				pod.setTt_xpyhddeto_uom(o.getString("tt_xpyhddeto_uom"));
-				pod.setTt_xpyhddeto_spq(o.getBigDecimal("tt_xpyhddeto_spq"));
-				pod.setTt_xpyhddeto_reqqty(o.getBigDecimal("tt_xpyhddeto_reqqty"));
-				pod.setTt_xpyhddeto_ordqty(o.getBigDecimal("tt_xpyhddeto_ordqty"));
-				pod.setTt_xpyhddeto_stat(o.getString("tt_xpyhddeto_stat"));
-				pod.setTt_xpyhddeto_priority(o.getString("tt_xpyhddeto_priority"));
-
-				pod.setTt_xpyhddeto_xpyhmstroid(o.getString("tt_xpyhddeto_xpyhmstroid"));
-				pod.setTt_xpyhddeto_xpyhddetoid(o.getString("tt_xpyhddeto_xpyhddetoid"));
-				pod.setTt_xpyhddeto_shipedqty(o.getBigDecimal("tt_xpyhddeto_shipedqty"));
-				purchaseOrderDetailList.add(pod);
-				i++;
-			}
-			poList.add(purchaseOrderDetailList);
-		}
-
-		return poList;
-
-	}
-
-	public static List<PurchaseOrderDetail> ConvertToBarcodePurchaseOrderDetail(List<ProDataObject> proDataObjectList) {
-		List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-				PurchaseOrderDetail pod = new PurchaseOrderDetail();
-				pod.setTt_xpyhddeto_seq(i);
-				pod.setTt_xpyhddeto_yhdnbr(o.getString("tt_xpyhddeto_yhdnbr"));
-				pod.setTt_xpyhddeto_partnbr(o.getString("tt_xpyhddeto_partnbr"));
-				pod.setTt_xpyhddeto_partdesc(o.getString("tt_xpyhddeto_partdesc"));
-				pod.setTt_xpyhddeto_supppart(o.getString("tt_xpyhddeto_supppart"));
-				pod.setTt_xpyhddeto_uom(o.getString("tt_xpyhddeto_uom"));
-				pod.setTt_xpyhddeto_innnerqty(o.getBigDecimal("tt_xpyhddeto_innnerqty"));
-				pod.setTt_xpyhddeto_externalqty(o.getBigDecimal("tt_xpyhddeto_externalqty"));
-				pod.setTt_xpyhddeto_pktype(o.getString("tt_xpyhddeto_pktype"));
-				pod.setTt_xpyhddeto_lots(o.getString("tt_xpyhddeto_lots"));
-				pod.setTt_xpyhddeto_qty(String.valueOf(o.getBigDecimal("tt_xpyhddeto_qty")));
-				pod.setTt_xpyhddeto_suppcode(o.getString("tt_xpyhddeto_suppcode"));
-				pod.setTt_xpyhddeto_xpyhddetoid(o.getString("tt_xpyhddeto_xpyhddetoid"));
-
-				purchaseOrderDetailList.add(pod);
-				i++;
-
-			}
-		}
-		return purchaseOrderDetailList;
-	}
-
-	public static List<Barcode> ConvertToBarcode(List<ProDataObject> proDataObjectList) {
-		List<Barcode> barcodeList = new ArrayList<Barcode>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-				Barcode bc = new Barcode();
-				bc.setTt_bcdeto_date(o.getString("tt_bcdeto_date"));
-				bc.setTt_bcdeto_partnbr(o.getString("tt_bcdeto_partnbr"));
-				bc.setTt_bcdeto_partdesc(o.getString("tt_bcdeto_partdesc"));
-				bc.setTt_bcdeto_lots(o.getString("tt_bcdeto_lots"));
-				bc.setTt_bcdeto_qty(o.getBigDecimal("tt_bcdeto_qty"));
-				bc.setTt_bcdeto_bcinfo1(o.getString("tt_bcdeto_bcinfo1"));
-				bc.setTt_bcdeto_suppname(o.getString("tt_bcdeto_suppname"));
-				bc.setTt_bcdeto_bcinfo2(o.getString("tt_bcdeto_bcinfo2"));
-				bc.setTt_bcdeto_serial(o.getString("tt_bcdeto_serial"));
-				bc.setTt_bcdeto_bcdetoid(o.getString("tt_bcdeto_bcdetoid"));
-				bc.setTt_bcdeto_bcnon(o.getString("tt_bcdeto_bcnon"));
-				barcodeList.add(bc);
-				i++;
-			}
-		}
-		return barcodeList;
-
-	}
-
-	// ship
-	public static List<Object> ConvertToShipPurchaseOrderAndDetail(List<ProDataObject> proDataObjectList) {
-		PurchaseOrder po = new PurchaseOrder();
-		List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>();
-		List<Object> poList = new ArrayList<Object>();
-
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			ProDataObject poDataObject = proDataObjectList.get(0);
-			po.setTt_xpyhmstro_yhdnbr(poDataObject.getString("tt_xpyhddeto_yhdnbr"));
-			po.setTt_xpyhmstro_suppcode(poDataObject.getString("tt_xpyhddeto_suppcode"));
-			po.setTt_xpyhmstro_suppname(poDataObject.getString("tt_xpyhddeto_suppname"));
-			po.setTt_xpyhmstro_shipfrom(poDataObject.getString("tt_xpyhddeto_shipfrom"));
-			po.setTt_xpyhmstro_shipto(poDataObject.getString("tt_xpyhddeto_shipto"));
-			po.setTt_xpyhmstro_carrier(poDataObject.getString("tt_xpyhddeto_carrier"));
-			po.setTt_xpyhmstro_dock(poDataObject.getString("tt_xpyhddeto_dock"));
-			po.setTt_xpyhmstro_xpyhmstroid(poDataObject.getString("tt_xpyhddeto_xpyhmstroid"));
-
-			poList.add(po);
-
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-				PurchaseOrderDetail pod = new PurchaseOrderDetail();
-				pod.setTt_xpyhddeto_seq(i);
-				pod.setTt_xpyhddeto_yhdnbr(o.getString("tt_xpyhddeto_yhdnbr"));
-				pod.setTt_xpyhddeto_partnbr(o.getString("tt_xpyhddeto_partnbr"));
-				pod.setTt_xpyhddeto_partdesc(o.getString("tt_xpyhddeto_partdesc"));
-				pod.setTt_xpyhddeto_supppart(o.getString("tt_xpyhddeto_supppart"));
-				pod.setTt_xpyhddeto_suppcode(o.getString("tt_xpyhddeto_suppcode"));
-				pod.setTt_xpyhddeto_shipto(o.getString("tt_xpyhddeto_shipto"));
-				pod.setTt_xpyhddeto_uom(o.getString("tt_xpyhddeto_uom"));
-				pod.setTt_xpyhddeto_spq(o.getBigDecimal("tt_xpyhddeto_spq"));
-				pod.setTt_xpyhddeto_toloc(o.getString("tt_xpyhddeto_toloc"));
-				pod.setTt_xpyhddeto_delvqty(String.valueOf(o.getBigDecimal("tt_xpyhddeto_delvqty")));
-				pod.setTt_xpyhddeto_openqty(o.getBigDecimal("tt_xpyhddeto_openqty"));
-				pod.setTt_xpyhddeto_xpyhmstroid(o.getString("tt_xpyhddeto_xpyhmstroid"));
-				pod.setTt_xpyhddeto_xpyhddetoid(o.getString("tt_xpyhddeto_xpyhddetoid"));
-
-				purchaseOrderDetailList.add(pod);
-				i++;
-			}
-			poList.add(purchaseOrderDetailList);
-		}
-
-		return poList;
-
-	}
-
-	// asn
-	public static List<Asn> ConverToAsn(List<ProDataObject> proDataObjectList) {
-
-		List<Asn> asnList = new ArrayList<Asn>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1; // qad的序号让我们自动生成
-			for (ProDataObject o : proDataObjectList) {
-				Asn asn = new Asn();
-
-				asn.setTt_xasnmstro_seq(i);
-				asn.setTt_xasnmstro_asnnbr(o.getString("tt_xasnmstro_asnnbr"));
-				asn.setTt_xasnmstro_shipto(o.getString("tt_xasnmstro_shipto"));
-				asn.setTt_xasnmstro_startdt(o.getString("tt_xasnmstro_startdt"));
-				asn.setTt_xasnmstro_stat(o.getString("tt_xasnmstro_stat"));
-				asn.setTt_xasnmstro_creator(o.getString("tt_xasnmstro_creator"));
-				asn.setTt_xasnmstro_xasnmstroid(o.getString("tt_xasnmstro_xasnmstroid"));
-
-				asnList.add(asn);
-				i++;
-			}
-		}
-		return asnList;
-	}
-
-	// asn detail
-	public static List<AsnDetail> ConverToAsnDetail(List<ProDataObject> proDataObjectList) {
-
-		List<AsnDetail> asnDetailList = new ArrayList<AsnDetail>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1; // qad的序号让我们自动生成
-			for (ProDataObject o : proDataObjectList) {
-				AsnDetail asnDetail = new AsnDetail();
-				asnDetail.setTt_xasndeto_seq(i);
-				asnDetail.setTt_xasndeto_asnnbr(o.getString("tt_xasndeto_asnnbr"));
-				asnDetail.setTt_xasndeto_shipto(o.getString("tt_xasndeto_shipto"));
-				asnDetail.setTt_xasndeto_startdt(o.getString("tt_xasndeto_startdt"));
-				asnDetail.setTt_xasndeto_stat(o.getInt("tt_xasndeto_stat"));
-				asnDetail.setTt_xasndeto_creator(o.getString("tt_xasndeto_creator"));
-				asnDetail.setTt_xasndeto_partnbr(o.getString("tt_xasndeto_partnbr"));
-				asnDetail.setTt_xasndeto_partdesc(o.getString("tt_xasndeto_partdesc"));
-				asnDetail.setTt_xasndeto_supppart(o.getString("tt_xasndeto_supppart"));
-				asnDetail.setTt_xasndeto_uom(o.getString("tt_xasndeto_uom"));
-				asnDetail.setTt_xasndeto_spq(o.getBigDecimal("tt_xasndeto_spq"));
-				asnDetail.setTt_xasndeto_asnqty(o.getBigDecimal("tt_xasndeto_asnqty"));
-				asnDetail.setTt_xasndeto_xasnmstroid(o.getString("tt_xasndeto_xasnmstroid"));
-				asnDetail.setTt_xasndeto_xasndetoid(o.getString("tt_xasndeto_xasndetoid"));
-				asnDetail.setTt_xasndeto_yhdnbr(o.getString("tt_xasndeto_yhdnbr"));
-				asnDetailList.add(asnDetail);
-				i++;
-			}
-		}
-		return asnDetailList;
-	}
-
-	// asn master and detail
-	public static List<Object> ConvertToAsnAndDetail(List<ProDataObject> proDataObjectList) {
-		Asn asn = new Asn();
-		List<AsnDetail> asnDetailList = new ArrayList<AsnDetail>();
-		List<Object> asnList = new ArrayList<Object>();
-
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			ProDataObject om = proDataObjectList.get(0);
-
-			asn.setTt_xasnmstro_asnnbr(om.getString("tt_xasndeto_asnnbr"));
-			asn.setTt_xasnmstro_shipto(om.getString("tt_xasndeto_shipto"));
-			asn.setTt_xasnmstro_startdt(om.getString("tt_xasndeto_startdt"));
-			asn.setTt_xasnmstro_stat(om.getString("tt_xasndeto_stat"));
-			asn.setTt_xasnmstro_creator(om.getString("tt_xasndeto_creator"));
-			asn.setTt_xasnmstro_suppcode(om.getString("tt_xasndeto_vend"));
-			
-			asn.setTt_xasndeto_vendname(om.getString("tt_xasndeto_vendname"));
-			asn.setTt_xasndeto_vendaddr(om.getString("tt_xasndeto_vendaddr"));
-			asn.setTt_xasndeto_vendcontact(om.getString("tt_xasndeto_vendcontact"));
-			asn.setTt_xasndeto_vendtax(om.getString("tt_xasndeto_vendtax"));
-			asn.setTt_xasndeto_shipname(om.getString("tt_xasndeto_shipname"));
-			asn.setTt_xasndeto_shipaddr(om.getString("tt_xasndeto_shipaddr"));
-
-			
-			asnList.add(asn);
-
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-
-				AsnDetail asnDetail = new AsnDetail();
-				asnDetail.setTt_xasndeto_seq(i);
-				asnDetail.setTt_xasndeto_asnnbr(o.getString("tt_xasndeto_asnnbr"));
-				asnDetail.setTt_xasndeto_shipto(o.getString("tt_xasndeto_shipto"));
-				asnDetail.setTt_xasndeto_startdt(o.getString("tt_xasndeto_startdt"));
-				asnDetail.setTt_xasndeto_stat(o.getInt("tt_xasndeto_stat"));
-				asnDetail.setTt_xasndeto_creator(o.getString("tt_xasndeto_creator"));
-				asnDetail.setTt_xasndeto_partnbr(o.getString("tt_xasndeto_partnbr"));
-				asnDetail.setTt_xasndeto_partdesc(o.getString("tt_xasndeto_partdesc"));
-				asnDetail.setTt_xasndeto_supppart(o.getString("tt_xasndeto_supppart"));
-				asnDetail.setTt_xasndeto_uom(o.getString("tt_xasndeto_uom"));
-				asnDetail.setTt_xasndeto_spq(o.getBigDecimal("tt_xasndeto_spq"));
-				asnDetail.setTt_xasndeto_asnqty(o.getBigDecimal("tt_xasndeto_asnqty"));
-				asnDetail.setTt_xasndeto_xasndetoid(o.getString("tt_xasndeto_xasndetoid"));
-				asnDetail.setTt_xasndeto_yhdnbr(o.getString("tt_xasndeto_yhdnbr"));
-				asnDetailList.add(asnDetail);
-				i++;
-
-			}
-			asnList.add(asnDetailList);
-		}
-
-		return asnList;
-
-	}
-
-	// receipt mstr
-	public static List<Receipt> ConverToReceipt(List<ProDataObject> proDataObjectList) {
-
-		List<Receipt> receiptList = new ArrayList<Receipt>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1; // qad的序号让我们自动生成
-			for (ProDataObject o : proDataObjectList) {
-				Receipt receipt = new Receipt();
-				receipt.setTt_prhmstro_seq(i);
-				receipt.setTt_prhmstro_receiver(o.getString("tt_prhmstro_receiver"));
-				receipt.setTt_prhmstro_suppcode(o.getString("tt_prhmstro_suppcode"));
-				receipt.setTt_prhmstro_asnnbr(o.getString("tt_prhmstro_asnnbr"));
-				receipt.setTt_prhmstro_suppcode(o.getString("tt_prhmstro_suppcode"));
-				receipt.setTt_prhmstro_rcdate(o.getString("tt_prhmstro_rcdate"));
-				receipt.setTt_prhmstro_rcuserid(o.getString("tt_prhmstro_rcuserid"));
-				receipt.setTt_prhmstro_prhmstroid(o.getString("tt_prhmstro_prhmstroid"));
-
-				receiptList.add(receipt);
-				i++;
-			}
-		}
-		return receiptList;
-	}
-
-	// receipt detail
-	public static List<ReceiptDetail> ConverToReceiptDetail(List<ProDataObject> proDataObjectList) {
-
-		List<ReceiptDetail> receiptDetailList = new ArrayList<ReceiptDetail>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1; // qad的序号让我们自动生成
-			for (ProDataObject o : proDataObjectList) {
-				ReceiptDetail receiptDetail = new ReceiptDetail();
-				receiptDetail.setTt_prhdeto_seq(i);
-				receiptDetail.setTt_prhdeto_receiver(o.getString("tt_prhdeto_receiver"));
-				receiptDetail.setTt_prhdeto_yhdnbr(o.getString("tt_prhdeto_yhdnbr"));
-				receiptDetail.setTt_prhdeto_partnbr(o.getString("tt_prhdeto_partnbr"));
-				receiptDetail.setTt_prhdeto_partdesc(o.getString("tt_prhdeto_partdesc"));
-				receiptDetail.setTt_prhdeto_supppart(o.getString("tt_prhdeto_supppart"));
-				receiptDetail.setTt_prhdeto_uom(o.getString("tt_prhdeto_uom"));
-				receiptDetail.setTt_prhdeto_spq(o.getBigDecimal("tt_prhdeto_spq"));
-				receiptDetail.setTt_prhdeto_toloc(o.getString("tt_prhdeto_toloc"));
-				receiptDetail.setTt_prhdeto_delvqty(o.getBigDecimal("tt_prhdeto_delvqty"));
-				receiptDetail.setTt_prhdeto_revdqty(o.getBigDecimal("tt_prhdeto_revdqty"));
-				receiptDetailList.add(receiptDetail);
-				i++;
-			}
-		}
-		return receiptDetailList;
-	}
-
-	// asn receipt and detail
-	public static List<Object> ConvertToReceiptAndDetail(List<ProDataObject> proDataObjectList) {
-		Receipt receipt = new Receipt();
-		List<ReceiptDetail> receiptDetailList = new ArrayList<ReceiptDetail>();
-		List<Object> receiptList = new ArrayList<Object>();
-
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			ProDataObject om = proDataObjectList.get(0);
-
-			receipt.setTt_prhmstro_receiver(om.getString("tt_prhdeto_receiver"));
-			receipt.setTt_prhmstro_suppcode(om.getString("tt_prhdeto_suppcode"));
-			receipt.setTt_prhmstro_asnnbr(om.getString("tt_prhdeto_asnnbr"));
-			receipt.setTt_prhmstro_suppcode(om.getString("tt_prhdeto_suppcode"));
-			receipt.setTt_prhmstro_rcdate(om.getString("tt_prhdeto_rcdate"));
-			receipt.setTt_prhmstro_rcuserid(om.getString("tt_prhdeto_rcuserid"));
-			receipt.setTt_prhmstro_prhmstroid(om.getString("tt_prhdeto_prhmstroid"));
-			receipt.setTt_prhmstro_shipto(om.getString("tt_prhdeto_shipto"));
-			
-			receipt.setTt_prhdeto_vendname(om.getString("tt_prhdeto_vendname"));
-			receipt.setTt_prhdeto_shipaddr(om.getString("tt_prhdeto_shipaddr"));
-			receiptList.add(receipt);
-
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-
-				ReceiptDetail receiptDetail = new ReceiptDetail();
-				receiptDetail.setTt_prhdeto_seq(i);
-				receiptDetail.setTt_prhdeto_yhdnbr(o.getString("tt_prhdeto_yhdnbr"));
-				receiptDetail.setTt_prhdeto_partnbr(o.getString("tt_prhdeto_partnbr"));
-				receiptDetail.setTt_prhdeto_partdesc(o.getString("tt_prhdeto_partdesc"));
-				receiptDetail.setTt_prhdeto_supppart(o.getString("tt_prhdeto_supppart"));
-				receiptDetail.setTt_prhdeto_uom(o.getString("tt_prhdeto_uom"));
-				receiptDetail.setTt_prhdeto_spq(o.getBigDecimal("tt_prhdeto_spq"));
-				receiptDetail.setTt_prhdeto_toloc(o.getString("tt_prhdeto_toloc"));
-				receiptDetail.setTt_prhdeto_delvqty(o.getBigDecimal("tt_prhdeto_delvqty"));
-				receiptDetail.setTt_prhdeto_revdqty(o.getBigDecimal("tt_prhdeto_revdqty"));
-				receiptDetailList.add(receiptDetail);
-				i++;
-			}
-			receiptList.add(receiptDetailList);
-		}
-
-		return receiptList;
-
-	}
-
-	// bill mstr
-	public static List<Bill> ConverToBill(List<ProDataObject> proDataObjectList) {
-
-		List<Bill> billList = new ArrayList<Bill>();
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1; // qad的序号让我们自动生成
-			for (ProDataObject o : proDataObjectList) {
-				Bill bill = new Bill();
-				bill.setTt_xprcmstro_seq(i);
-				bill.setTt_xprcmstro_voucher(o.getString("tt_xprcmstro_voucher"));
-				bill.setTt_xprcmstro_suppcode(o.getString("tt_xprcmstro_suppcode"));
-				bill.setTt_xprcmstro_invdate(o.getString("tt_xprcmstro_invdate"));
-				bill.setTt_xprcmstro_totalamt(o.getBigDecimal("tt_xprcmstro_totalamt"));
-				bill.setTt_xprcmstro_printed(o.getString("tt_xprcmstro_printed"));
-				bill.setTt_xprcmstro_stat(o.getString("tt_xprcmstro_stat"));
-				bill.setTt_xprcmstro_xprcmstroid(o.getString("tt_xprcmstro_xprcmstroid"));
-				bill.setTt_xprcmstro_type(o.getString("tt_xprcmstro_type"));
-
-				billList.add(bill);
-				i++;
-			}
-		}
-		return billList;
-	}
-
-	// bill det
-	public static List<Object> ConvertToBillAndDetail(List<ProDataObject> proDataObjectList) throws ParseException {
-		Bill bill = new Bill();
-		List<BillDetail> billDetailList = new ArrayList<BillDetail>();
-		List<Object> billList = new ArrayList<Object>();
-
-		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			ProDataObject om = proDataObjectList.get(0);
-
-			bill.setTt_xprcmstro_voucher(om.getString("tt_xpyhddeto_voucher"));
-			bill.setTt_xprcmstro_suppcode(om.getString("tt_xpyhddeto_suppcode"));
 	
-			bill.setTt_xprcmstro_totalamt(om.getBigDecimal("tt_xpyhddeto_totalamt"));
-			bill.setTt_xprcmstro_stat(om.getString("tt_xpyhddeto_stat"));
+	public static List<Edi> ConverToEdi(List<ProDataObject> proDataObjectList) {
 
-			bill.setTt_xprcmstro_qty(String.valueOf(om.getInt("tt_xpyhddeto_qty")));
-			bill.setTt_xprcmstro_taxamt(String.valueOf(om.getBigDecimal("tt_xpyhddeto_taxamt")));
-			bill.setTt_xprcmstro_notaxamt(String.valueOf(om.getBigDecimal("tt_xpyhddeto_notaxamt")));
-			bill.setTt_xprcmstro_invnbr(om.getString("tt_xpyhddeto_invnbr"));
-			bill.setTt_xprcmstro_rmk(om.getString("tt_xpyhddeto_rmk"));
-			bill.setTt_xprcmstro_claiminv(om.getString("tt_xpyhddeto_claiminv"));
-			bill.setTt_xprcmstro_claimamt(om.getBigDecimal("tt_xpyhddeto_claimamt"));
-			bill.setTt_xprcmstro_xprcmstroid(om.getString("tt_xpyhddeto_voucher"));
-			bill.setTt_xprcmstro_xprcmstroid(om.getString("tt_xpyhddeto_xprcmstroid"));
-			bill.setTt_xprcmstro_indexinvnbr(om.getString("tt_xpyhddeto_indexinvnbr"));
-			bill.setTt_xpyhddeto_disamt(String.valueOf(om.getBigDecimal("tt_xpyhddeto_disamt")));
+		List<Edi> ediList = new ArrayList<Edi>();
+		if (proDataObjectList != null && proDataObjectList.size() > 0) {
+			for (ProDataObject o : proDataObjectList) {
+				Edi edi = new Edi();
+				edi.setVer(o.getString("tout1_ver"));
+				edi.setRlse_dt(o.getString("tout1_rlse_dt"));
+				edi.setType(o.getString("tout1_type"));
+				edi.setPlandt(o.getString("tout1_plandt_fr") + "~" + o.getString("tout1_plandt_to"));
+				edi.setImport_dt(o.getString("tout1_import_dt") + " "+  o.getString("tout1_import_tm"));
+				
+				ediList.add(edi);
+			}
+		}
+		return ediList;
+	}
+
+	public static ScheduleView ConvertToEdiDetail(List<ProDataObject> proDataObjectList) {
 	
-			BigDecimal notaxamt = om.getBigDecimal("tt_xpyhddeto_notaxamt");
-			BigDecimal taxamt = om.getBigDecimal("tt_xpyhddeto_taxamt");
+		ScheduleView scheduleView = new ScheduleView();
+		List<String> dateList = new ArrayList<String>();
+		List<String> partList = new ArrayList<String>();
+		ScheduleHead scheduleHead = new ScheduleHead();
+		List<ScheduleBody> scheduleBodyList =  new ArrayList<ScheduleBody>();
+		List<Map<String, Object>> headList = new ArrayList<Map<String, Object>>();
+	
+		if (proDataObjectList != null && proDataObjectList.size() > 0) {
 			
-			BigDecimal invoiceAmount = notaxamt.add(taxamt);
-			bill.setTt_xpyhddeto_invoiceamt(String.valueOf(invoiceAmount));
-			//bill.setTt_xprcmstro_type("0");                  //后面要加字段
-
-			//日期转一下格式,现在存到创建日期，发票日期给供应商维护
-			SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");//小写的mm表示的是分钟  
-			String dstr=om.getString("tt_xpyhddeto_invdate");  
-			if(dstr != null)
+			for (ProDataObject o : proDataObjectList) {
+				String part = o.getString("tout2_part");
+				String plan_dt  = o.getString("tout2_plan_dt");
+				if(!dateList.contains(plan_dt))
+				{
+					dateList.add(plan_dt);
+				}
+				if(!partList.contains(part))
+				{
+					partList.add(part);
+				}
+			}
+			
+			Collections.sort(dateList);
+			Collections.sort(partList);
+			for(String d : dateList)
 			{
-			java.util.Date invDate=sdf.parse(dstr);  
+				Map<String, Object> head = new HashMap<String, Object>();
+				head.put("scheduleType", "Firm");
+				head.put("dateFrom", d);
+				head.put("dateTo", d);
+				headList.add(head);
+				
+				for(String p:partList)
+				{
+				
+					
+					List<BigDecimal> planQtyList = new ArrayList<BigDecimal>();
+					List<BigDecimal> totalQtyList = new ArrayList<BigDecimal>();
+					for (ProDataObject o : proDataObjectList) 
+					{
+						String part = o.getString("tout2_part");
+						String plan_dt  = o.getString("tout2_plan_dt");
+						String desc  = o.getString("tout2_desc");
+						if(p.equals(part) && d.equals(plan_dt))
+						{
+							BigDecimal planQty = o.getBigDecimal("tout2_plan_qty");
+							BigDecimal totalQty = o.getBigDecimal("tout2_cum_ship");
+							planQtyList.add(planQty);
+							totalQtyList.add(totalQty);
+							break;
+						}
+					}
+					ScheduleBody sb1 = new ScheduleBody();
+					sb1.setItemCode(p);
+					sb1.setPlanQtyList(planQtyList);
+					scheduleBodyList.add(sb1);
+					
+					ScheduleBody sb2 = new ScheduleBody();
+					sb2.setItemCode(p);
+					sb2.setTotalQtyList(totalQtyList);
+					scheduleBodyList.add(sb2);
+				}
+				
 			
-			SimpleDateFormat sdft=new SimpleDateFormat("yyyyMMdd");  
-			String invDateStr=sdft.format(invDate);  
-			bill.setTt_xprcmstro_invdate(invDateStr);
 			}
 			
-			billList.add(bill);
-
-			int i = 1;
-			for (ProDataObject o : proDataObjectList) {
-				BillDetail pod = new BillDetail();
-				pod.setTt_xpyhddeto_seq(i);
-				pod.setTt_xpyhddeto_voucher(o.getString("tt_xpyhddeto_voucher"));
-				pod.setTt_xpyhddeto_partnbr(o.getString("tt_xpyhddeto_partnbr"));
-				pod.setTt_xpyhddeto_receiver(o.getString("tt_xpyhddeto_receiver"));
-				pod.setTt_xpyhddeto_poprice(o.getBigDecimal("tt_xpyhddeto_poprice"));
-				pod.setTt_xpyhddeto_uom(o.getString("tt_xpyhddeto_uom"));
-				pod.setTt_xpyhddeto_invprice(o.getBigDecimal("tt_xpyhddeto_invprice"));
-				pod.setTt_xpyhddeto_invamt(o.getBigDecimal("tt_xpyhddeto_invamt"));
-				pod.setTt_xpyhddeto_partdesc(o.getString("tt_xpyhddeto_partdesc"));
-				pod.setTt_xpyhddeto_rcdate(o.getString("tt_xpyhddeto_rcdate"));
-				pod.setTt_xpyhddeto_rcqty(o.getBigDecimal("tt_xpyhddeto_rcqty"));
-				billDetailList.add(pod);
-				i++;
-
-			}
-			billList.add(billDetailList);
+			scheduleHead.setHeadList(headList);
+			scheduleView.setScheduleBodyList(scheduleBodyList);
+			
 		}
+		return scheduleView;
 
-		return billList;
 	}
 
-	// 预测
-	public static List<PurchaseOrderDetail> ConvertToForecastPurchaseOrderDetail(
-			List<ProDataObject> proDataObjectList) {
-		List<PurchaseOrderDetail> purchaseOrderDetailList = new ArrayList<PurchaseOrderDetail>();
+	public static List<ShipSummary> ConverToShipSummary(List<ProDataObject> proDataObjectList) {
+
+		List<ShipSummary> ediList = new ArrayList<ShipSummary>();
 		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			int i = 1;
 			for (ProDataObject o : proDataObjectList) {
-				PurchaseOrderDetail pod = new PurchaseOrderDetail();
-				pod.setTt_xpyhddeto_seq(i);
-				pod.setTt_xpyhddeto_suppcode(o.getString("tt_forecast_suppcode"));
-				pod.setTt_xpyhddeto_shipto(o.getString("tt_forecast_shipto"));
-				pod.setTt_xpyhddeto_partnbr(o.getString("tt_forecast_partnbr"));
-				pod.setTt_xpyhddeto_partdesc(o.getString("tt_forecast_partdesc"));
-				pod.setTt_xpyhddeto_supppart(o.getString("tt_forecast_supppart"));
-				pod.setTt_xpyhddeto_receptdt(o.getString("tt_forecast_reqdt"));
-				pod.setTt_xpyhddeto_currcy(o.getString("tt_forecast_currcy"));
-				pod.setTt_xpyhddeto_uom(o.getString("tt_forecast_uom"));
-				pod.setTt_xpyhddeto_innnerqty(o.getBigDecimal("tt_forecast_inerpk"));
-				pod.setTt_xpyhddeto_externalqty(o.getBigDecimal("tt_forecast_extpk"));
-				pod.setTt_forecast_fcastqty(o.getBigDecimal("tt_forecast_fcastqty"));
-
-				purchaseOrderDetailList.add(pod);
-				i++;
-
+				ShipSummary shipSummary = new ShipSummary();
+				shipSummary.setVer(o.getString("tout1_ver"));
+				shipSummary.setRlse_dt(o.getString("tout1_rlse_dt"));
+				shipSummary.setType(o.getString("tout1_type"));
+				shipSummary.setPlandt(o.getString("tout1_plandt_fr") + "~" + o.getString("tout1_plandt_to"));
+				shipSummary.setImport_dt(o.getString("tout1_import_dt") + " "+  o.getString("tout1_import_tm"));
+				ediList.add(shipSummary);
 			}
 		}
-		return purchaseOrderDetailList;
+		return ediList;
+	}
+	
+	
+	
+	public static List<ShipDetail> ConvertToShipDetail(List<ProDataObject> proDataObjectList) {
+		
+		List<ShipDetail> shipDetailList = new ArrayList<ShipDetail>();		
+		if (proDataObjectList != null && proDataObjectList.size() > 0) {
+			
+			for (ProDataObject o : proDataObjectList) {
+				ShipDetail shipDetail = new ShipDetail();
+				shipDetail.setPart(o.getString("tout3_part"));
+				shipDetail.setDesc(o.getString("tout3_desc"));
+				shipDetail.setFord_part(o.getString("tout3_ford_part"));
+				shipDetail.setRec_palnt(o.getString("tout3_rec_plant"));
+				shipDetail.setShip_fr(o.getString("tout3_ship_fr"));
+				shipDetail.setPlan_qty(o.getBigDecimal("tout3_plan_qty"));
+				shipDetail.setCum_ship(o.getBigDecimal("tout3_cum_ship"));
+				shipDetail.setUm(o.getString("tout3_um"));
+				shipDetail.setPurpose(o.getString("tout3_purpose"));
+				shipDetail.setGw(o.getBigDecimal("tout3_unit_gw"));
+				shipDetail.setNw(o.getBigDecimal("tout3_unit_nw"));
+				shipDetail.setWt_um(o.getString("tout3_wt_um"));
+				shipDetail.setPackage_type(o.getString("tout3_package_type"));
+				shipDetail.setId(o.getInt("tout3_lading_qty"));
+				shipDetail.setCarrier(o.getString("tout3_carrier"));
+				shipDetail.setTrans_mthd(o.getString("tout3_trans_mthd"));
+				shipDetail.setPur_order(o.getString("tout3_pur_order"));
+				shipDetail.setEquip(o.getString("tout3_equip"));
+				shipDetail.setNbr(o.getString("tout3_nbr"));
+				shipDetail.setLn(o.getString("tout3_ln"));
+				shipDetail.setSite(o.getString("tout3_site"));
+				shipDetail.setLoc(o.getString("tout3_loc"));
+				shipDetailList.add(shipDetail);
+						
+			}
+		}
+		return shipDetailList;
 
 	}
 
+	
+	
 }

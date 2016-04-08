@@ -20,26 +20,12 @@
         <property name="roleManager" ref="roleManager"/>
         <property name="universalManager" ref="universalManager"/>
     </bean>
-    <bean id="purchaseOrderAction" class="com.yfkey.webapp.action.PurchaseOrderAction"
+  
+	<bean id="ediAction" class="com.yfkey.webapp.action.EdiAction"
 		scope="prototype">
 		<property name="universalManager" ref="universalManager" />
 	</bean>
-	<bean id="asnAction" class="com.yfkey.webapp.action.AsnAction"
-		scope="prototype">
-		<property name="universalManager" ref="universalManager" />
-	</bean>
-	<bean id="barcodeAction" class="com.yfkey.webapp.action.BarcodeAction"
-		scope="prototype">
-		<property name="universalManager" ref="universalManager" />
-	</bean>
-	<bean id="receiptAction" class="com.yfkey.webapp.action.ReceiptAction"
-		scope="prototype">
-		<property name="universalManager" ref="universalManager" />
-	</bean>
-	<bean id="billAction" class="com.yfkey.webapp.action.BillAction"
-		scope="prototype">
-		<property name="universalManager" ref="universalManager" />
-	</bean>
+
 	<bean id="fileUploadAction" class="com.yfkey.webapp.action.FileUploadAction"
 		scope="prototype">
 	</bean>
