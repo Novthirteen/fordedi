@@ -4,7 +4,7 @@
 
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.yfkey</groupId>
-	<artifactId>esupply-yfkey</artifactId>
+	<artifactId>esupply-fordedi</artifactId>
 	<packaging>war</packaging>
 	<version>1.0</version>
 	<name>E-Supply YFKEY</name>
@@ -127,7 +127,7 @@
 		<amp.genericCore>true</amp.genericCore>
 		<amp.fullSource>false</amp.fullSource>
 		<dao.framework>hibernate</dao.framework>
-		<db.name>esupply</db.name>
+		<db.name>esupply_fordedi</db.name>
 		<web.framework>struts</web.framework>
 
 		<!-- Framework/Plugin versions -->
