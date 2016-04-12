@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import com.yfkey.qad.QADConfg;
-import com.yfkey.qad.YFKSSSCP;
+import com.yfkey.qad.FordEDI;
 import com.yfkey.model.LabelValue;
 import com.yfkey.model.PermissionType;
 import com.yfkey.service.UniversalManager;
@@ -112,8 +112,8 @@ public class BaseAction extends ActionSupport {
 	 * @return "cancel"
 	 */
 
-	protected static YFKSSSCP yfkssScp;
-	private static String yfkssScpLock = "yfkssScpLock";
+	protected static FordEDI yfkssFordEdi;
+	private static String yfkssFordEdiLock = "yfkssFordEdiLock";
 
 	public String getCbValue() {
 		return UUID.randomUUID().toString();
@@ -262,14 +262,14 @@ public class BaseAction extends ActionSupport {
 	protected static boolean ConnectQAD() {
 		try {
 
-			if (yfkssScp == null) {
-				synchronized (yfkssScpLock) {
-					if (yfkssScp == null) {
-						yfkssScp = new YFKSSSCP(new Connection(QADConfg.getQadServerUrl(), "", "", null));
+			if (yfkssFordEdi == null) {
+				synchronized (yfkssFordEdiLock) {
+					if (yfkssFordEdi == null) {
+						yfkssFordEdi = new FordEDI(new Connection(QADConfg.getQadServerUrl(), "", "", null));
 					}
 				}
 			}
-			if (yfkssScp != null) {
+			if (yfkssFordEdi != null) {
 				return true;
 			} else {
 				return false;

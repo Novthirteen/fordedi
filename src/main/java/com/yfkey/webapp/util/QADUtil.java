@@ -39,7 +39,6 @@ public final class QADUtil {
 	private QADUtil() {
 	}
 
-	
 	public static List<Edi> ConverToEdi(List<ProDataObject> proDataObjectList) {
 
 		List<Edi> ediList = new ArrayList<Edi>();
@@ -50,8 +49,8 @@ public final class QADUtil {
 				edi.setRlse_dt(o.getString("tout1_rlse_dt"));
 				edi.setType(o.getString("tout1_type"));
 				edi.setPlandt(o.getString("tout1_plandt_fr") + "~" + o.getString("tout1_plandt_to"));
-				edi.setImport_dt(o.getString("tout1_import_dt") + " "+  o.getString("tout1_import_tm"));
-				
+				edi.setImport_dt(o.getString("tout1_import_dt") + " " + o.getString("tout1_import_tm"));
+
 				ediList.add(edi);
 			}
 		}
@@ -59,52 +58,55 @@ public final class QADUtil {
 	}
 
 	public static ScheduleView ConvertToEdiDetail(List<ProDataObject> proDataObjectList) {
-	
+
 		ScheduleView scheduleView = new ScheduleView();
 		List<String> dateList = new ArrayList<String>();
-		List<String> partList = new ArrayList<String>();
+		List<String> ford_partList = new ArrayList<String>();
 		ScheduleHead scheduleHead = new ScheduleHead();
-		List<ScheduleBody> scheduleBodyList =  new ArrayList<ScheduleBody>();
+		List<ScheduleBody> scheduleBodyList = new ArrayList<ScheduleBody>();
 		List<Map<String, Object>> headList = new ArrayList<Map<String, Object>>();
-	
+
 		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			
+
 			for (ProDataObject o : proDataObjectList) {
-				String part = o.getString("tout2_part");
-				String plan_dt  = o.getString("tout2_plan_dt");
-				if(!dateList.contains(plan_dt))
-				{
+				String ford_part = o.getString("tout2_ford_part");
+				String plan_dt = o.getString("tout2_plan_dt");
+				if (!dateList.contains(plan_dt)) {
 					dateList.add(plan_dt);
 				}
-				if(!partList.contains(part))
-				{
-					partList.add(part);
+				if (!ford_partList.contains(ford_part)) {
+					ford_partList.add(ford_part);
 				}
 			}
-			
+
 			Collections.sort(dateList);
-			Collections.sort(partList);
-			for(String d : dateList)
-			{
+			Collections.sort(ford_partList);
+			for (String d : dateList) {
 				Map<String, Object> head = new HashMap<String, Object>();
 				head.put("scheduleType", "Firm");
 				head.put("dateFrom", d);
 				head.put("dateTo", d);
 				headList.add(head);
-				
-				for(String p:partList)
-				{
-				
-					
-					List<BigDecimal> planQtyList = new ArrayList<BigDecimal>();
-					List<BigDecimal> totalQtyList = new ArrayList<BigDecimal>();
-					for (ProDataObject o : proDataObjectList) 
-					{
-						String part = o.getString("tout2_part");
-						String plan_dt  = o.getString("tout2_plan_dt");
-						String desc  = o.getString("tout2_desc");
-						if(p.equals(part) && d.equals(plan_dt))
-						{
+			}
+
+			for (String p : ford_partList) {
+
+				List<BigDecimal> planQtyList = new ArrayList<BigDecimal>();
+				List<BigDecimal> totalQtyList = new ArrayList<BigDecimal>();
+				String desc = "";
+				String part = "";
+				String rlse_dt = "";
+				String um = "";
+				for (String d : dateList) {
+					for (ProDataObject o : proDataObjectList) {
+						String ford_part = o.getString("tout2_ford_part");
+						String plan_dt = o.getString("tout2_plan_dt");
+
+						if (p.equals(ford_part) && d.equals(plan_dt)) {
+							desc = o.getString("tout2_desc");
+							part = o.getString("tout2_part");
+							rlse_dt = o.getString("tout2_rlse_dt");
+							um = o.getString("tout2_um");
 							BigDecimal planQty = o.getBigDecimal("tout2_plan_qty");
 							BigDecimal totalQty = o.getBigDecimal("tout2_cum_ship");
 							planQtyList.add(planQty);
@@ -112,23 +114,31 @@ public final class QADUtil {
 							break;
 						}
 					}
+				}
 					ScheduleBody sb1 = new ScheduleBody();
-					sb1.setItemCode(p);
+					sb1.setPart(part);
+					sb1.setPartDescription(desc);
+					sb1.setFord_part(p);
+					sb1.setReleaseDate(rlse_dt);
+					sb1.setUm(um);
 					sb1.setPlanQtyList(planQtyList);
 					scheduleBodyList.add(sb1);
-					
+
 					ScheduleBody sb2 = new ScheduleBody();
-					sb2.setItemCode(p);
+					sb2.setPart(part);
+					sb2.setPartDescription(desc);
+					sb2.setFord_part(p);
+					sb2.setReleaseDate(rlse_dt);
+					sb2.setUm(um);
 					sb2.setTotalQtyList(totalQtyList);
 					scheduleBodyList.add(sb2);
 				}
-				
 			
-			}
-			
+
 			scheduleHead.setHeadList(headList);
+			scheduleView.setScheduleHead(scheduleHead);
 			scheduleView.setScheduleBodyList(scheduleBodyList);
-			
+
 		}
 		return scheduleView;
 
@@ -144,20 +154,18 @@ public final class QADUtil {
 				shipSummary.setRlse_dt(o.getString("tout1_rlse_dt"));
 				shipSummary.setType(o.getString("tout1_type"));
 				shipSummary.setPlandt(o.getString("tout1_plandt_fr") + "~" + o.getString("tout1_plandt_to"));
-				shipSummary.setImport_dt(o.getString("tout1_import_dt") + " "+  o.getString("tout1_import_tm"));
+				shipSummary.setImport_dt(o.getString("tout1_import_dt") + " " + o.getString("tout1_import_tm"));
 				ediList.add(shipSummary);
 			}
 		}
 		return ediList;
 	}
-	
-	
-	
+
 	public static List<ShipDetail> ConvertToShipDetail(List<ProDataObject> proDataObjectList) {
-		
-		List<ShipDetail> shipDetailList = new ArrayList<ShipDetail>();		
+
+		List<ShipDetail> shipDetailList = new ArrayList<ShipDetail>();
 		if (proDataObjectList != null && proDataObjectList.size() > 0) {
-			
+
 			for (ProDataObject o : proDataObjectList) {
 				ShipDetail shipDetail = new ShipDetail();
 				shipDetail.setPart(o.getString("tout3_part"));
@@ -169,13 +177,14 @@ public final class QADUtil {
 				shipDetail.setCum_ship(o.getBigDecimal("tout3_cum_ship"));
 				shipDetail.setUm(o.getString("tout3_um"));
 				shipDetail.setPurpose(o.getString("tout3_purpose"));
-				shipDetail.setGw(o.getBigDecimal("tout3_unit_gw"));
-				shipDetail.setNw(o.getBigDecimal("tout3_unit_nw"));
+				shipDetail.setGw(o.getBigDecimal("tout3_unit_gw").toString());
+				shipDetail.setNw(o.getBigDecimal("tout3_unit_nw").toString());
 				shipDetail.setWt_um(o.getString("tout3_wt_um"));
 				shipDetail.setPackage_type(o.getString("tout3_package_type"));
 				shipDetail.setId(o.getInt("tout3_lading_qty"));
 				shipDetail.setCarrier(o.getString("tout3_carrier"));
 				shipDetail.setTrans_mthd(o.getString("tout3_trans_mthd"));
+				shipDetail.setUnits_per(o.getBigDecimal("tout3_units_per").toString());
 				shipDetail.setPur_order(o.getString("tout3_pur_order"));
 				shipDetail.setEquip(o.getString("tout3_equip"));
 				shipDetail.setNbr(o.getString("tout3_nbr"));
@@ -183,13 +192,11 @@ public final class QADUtil {
 				shipDetail.setSite(o.getString("tout3_site"));
 				shipDetail.setLoc(o.getString("tout3_loc"));
 				shipDetailList.add(shipDetail);
-						
+
 			}
 		}
 		return shipDetailList;
 
 	}
 
-	
-	
 }

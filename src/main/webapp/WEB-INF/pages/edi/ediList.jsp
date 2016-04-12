@@ -19,11 +19,11 @@
 					name="cb" value="${cbValue}">
 			</div>
 			<div class="col-xs-3 search-group">
-				<s:textfield cssClass="form-control search-control"
+				<s:textfield cssClass="form-control search-control" id="plandt_fr"
 					key="edi.plandt_fr" />
 			</div>
 			<div class="col-xs-3 search-group">
-				<s:textfield cssClass="form-control search-control"
+				<s:textfield cssClass="form-control search-control" id="plandt_to"
 					key="edi.plandt_to" />
 			</div>
 		</div>
@@ -78,12 +78,7 @@
 		<display:setProperty name="paging.banner.items_name">
 			<fmt:message key="ediList.edis" />
 		</display:setProperty>
-		<display:setProperty name="export.excel.filename" value="Edi List.xls" />
-
-		<display:setProperty name="export.pdf" value="false" />
-		<display:setProperty name="export.excel" value="true" />
-		<display:setProperty name="export.csv" value="false" />
-		<display:setProperty name="export.xml" value="false" />
+		
 	</display:table>
 
 
@@ -108,6 +103,35 @@
 							valueField : 'value'
 						//onSelect: displayResult
 						});
+		
+		
+		$('#plandt_fr').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
+
+		$('#plandt_to').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
+		
+		$('#importdt_fr').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
+
+		$('#importdt_to').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
 	</script>
 
 

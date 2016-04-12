@@ -25,18 +25,18 @@ public class ShipDetail extends BaseObject {
     private BigDecimal unit_nw;						//单位净重
     private String wt_um;							//重量单位
     private String package_type;					//包装类型
-    private int lading_qty;							//提单数量
+    private String lading_qty;							//提单数量
     private String carrier;							//承运商代码
     private String trans_mthd;						//运输方式
-    private BigDecimal units_per;					//容器单位
+    private String units_per;					//容器单位
     private String pur_order;						//采购订单
     private String equip;							//运载媒介
    
     private String ship_qty;						//本次发货数
     private String shipper;						    //装箱单号
     private String bl;								//提单号
-    private BigDecimal gw;							//毛重
-    private BigDecimal nw;							//净重
+    private String gw;							//毛重
+    private String nw;							//净重
     private String conv_nbr;						//车牌号码
     private String airport;							//运载媒介
 
@@ -137,10 +137,10 @@ public class ShipDetail extends BaseObject {
 	public void setPackage_type(String package_type) {
 		this.package_type = package_type;
 	}
-	public int getLading_qty() {
+	public String getLading_qty() {
 		return lading_qty;
 	}
-	public void setLading_qty(int lading_qty) {
+	public void setLading_qty(String lading_qty) {
 		this.lading_qty = lading_qty;
 	}
 	public String getCarrier() {
@@ -155,10 +155,10 @@ public class ShipDetail extends BaseObject {
 	public void setTrans_mthd(String trans_mthd) {
 		this.trans_mthd = trans_mthd;
 	}
-	public BigDecimal getUnits_per() {
+	public String getUnits_per() {
 		return units_per;
 	}
-	public void setUnits_per(BigDecimal units_per) {
+	public void setUnits_per(String units_per) {
 		this.units_per = units_per;
 	}
 	public String getPur_order() {
@@ -193,16 +193,16 @@ public class ShipDetail extends BaseObject {
 	public void setBl(String bl) {
 		this.bl = bl;
 	}
-	public BigDecimal getGw() {
+	public String getGw() {
 		return gw;
 	}
-	public void setGw(BigDecimal gw) {
+	public void setGw(String gw) {
 		this.gw = gw;
 	}
-	public BigDecimal getNw() {
+	public String getNw() {
 		return nw;
 	}
-	public void setNw(BigDecimal nw) {
+	public void setNw(String nw) {
 		this.nw = nw;
 	}
 	public String getConv_nbr() {

@@ -9,7 +9,7 @@
 		<fmt:message key="shipSummaryList.heading" />
 	</h2>
 
-	<s:form name="shipSummaryForm" action="shipSummarys" method="post" validate="true">
+	<s:form name="shipSummaryForm" action="shipEdis" method="post" validate="true">
 		<div class="row">
 			<div class="col-xs-3 search-group">
 				<label class="control-label"><fmt:message key="shipSummary.shipto" /></label>
@@ -19,11 +19,11 @@
 					name="cb" value="${cbValue}">
 			</div>
 			<div class="col-xs-3 search-group">
-				<s:textfield cssClass="form-control search-control"
+				<s:textfield cssClass="form-control search-control" id="plandt_fr"
 					key="shipSummary.plandt_fr" />
 			</div>
 			<div class="col-xs-3 search-group">
-				<s:textfield cssClass="form-control search-control"
+				<s:textfield cssClass="form-control search-control" id="plandt_to"
 					key="shipSummary.plandt_to" />
 			</div>
 		</div>
@@ -40,7 +40,7 @@
 			</div>
 			<div class="col-xs-3 search-group layouttrim">
 				<input type="hidden" name="from" value="list" />
-				<s:submit type="button" cssClass="btn" action="shipSummarys"
+				<s:submit type="button" cssClass="btn" action="shipEdis"
 					key="button.search" theme="simple">
 					<i class="icon-search"></i>
 					<fmt:message key="button.search" />
@@ -56,7 +56,7 @@
 	
 		<display:column property="ver" escapeXml="true"
 			sortable="true" titleKey="shipSummary.ver"
-			url="/edi/editShipEdi?from=list&cb=${cbValue}"
+			url="/edi/editShipEdi?from=list&cb=${cbValue}&plandt_fr=${plandt_fr}&plandt_to=${plandt_to}"
 			paramId="ver"
 			paramProperty="ver" />
 		<display:column property="rlse_dt" escapeXml="true"
@@ -108,6 +108,34 @@
 							valueField : 'value'
 						//onSelect: displayResult
 						});
+		
+		$('#plandt_fr').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
+
+		$('#plandt_to').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
+		
+		$('#importdt_fr').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
+
+		$('#importdt_to').datepicker({
+			format : "yyyymmdd",
+			language : "${pageContext.response.locale}",
+			autoclose : true,
+			todayHighlight : true
+		});
 	</script>
 
 

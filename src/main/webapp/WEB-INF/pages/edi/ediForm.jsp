@@ -51,9 +51,9 @@
 			<s:if test="#rowstatus.odd == true">
 				<tr class="odd">
 					<td nowrap="nowrap">${scheduleBody.releaseDate}</td>
-					<td nowrap="nowrap">${scheduleBody.itemCode}</td>
-					<td nowrap="nowrap">${scheduleBody.itemDescription}</td>
-					<td nowrap="nowrap">${scheduleBody.supplierItemCode}</td>
+					<td nowrap="nowrap">${scheduleBody.part}</td>
+					<td nowrap="nowrap">${scheduleBody.partDescription}</td>
+					<td nowrap="nowrap">${scheduleBody.ford_part}</td>
 					<td nowrap="nowrap">${scheduleBody.um}</td>
 					<s:iterator id="planQty" value="#scheduleBody.planQtyList">
 						<td><fmt:formatNumber value="${planQty}" pattern="#,###.##" /></td>

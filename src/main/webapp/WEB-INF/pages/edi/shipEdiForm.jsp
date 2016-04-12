@@ -16,7 +16,6 @@
 		<div class="col-xs-4 search-group">
 			<s:textfield key="shipSummary.ver" cssClass="form-control"
 				readonly="true" />
-			<s:hidden key="shipSummary.ver" />
 		</div>
 		<div class="col-xs-4 search-group"></div>
 	</div>
@@ -61,7 +60,8 @@
 		<display:column titleKey="shipDetail.ship_qty">
 			<input type="text" style="margin: 0px; width: 80px;"
 				name="shipDetails[${shipDetail_rowNum - 1}].ship_qty"
-				value="${shipDetail.ship_qty}" class="text medium" />
+				value="${shipDetail.ship_qty}" class="text medium"
+				onchange="calcWeightbyQty(this,${shipDetail_rowNum - 1})" />
 			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].id"
 				value="${shipDetail.id}" />
 			<input type="hidden"
@@ -85,9 +85,26 @@
 			<input type="hidden"
 				name="shipDetails[${shipDetail_rowNum - 1}].cum_ship"
 				value="${shipDetail.cum_ship}" />
+			<input type="hidden"
+				name="shipDetails[${shipDetail_rowNum - 1}].pur_order"
+				value="${shipDetail.pur_order}" />
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].nbr"
+				value="${shipDetail.nbr}" />
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].ln"
+				value="${shipDetail.ln}" />
+			<input type="hidden"
+				name="shipDetails[${shipDetail_rowNum - 1}].site"
+				value="${shipDetail.site}" />
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].loc"
+				value="${shipDetail.loc}" />
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_gw"
+				value="${shipDetail.unit_gw}" />
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_nw"
+				value="${shipDetail.unit_nw}" />
 		</display:column>
 		<display:column titleKey="shipDetail.um">
 			<input type="text" style="margin: 0px; width: 60px;"
+				id="shipDetails[${shipDetail_rowNum - 1}].um"
 				name="shipDetails[${shipDetail_rowNum - 1}].um"
 				value="${shipDetail.um}" class="text medium" />
 		</display:column>
@@ -103,23 +120,44 @@
 		</display:column>
 
 		<display:column titleKey="shipDetail.purpose">
-			<input type="text" style="margin: 0px; width: 60px;"
-				name="shipDetails[${shipDetail_rowNum - 1}].purpose"
-				value="${shipDetail.purpose}" class="text medium" />
+
+			<select id="shipDetails[${shipDetail_rowNum - 1}].purpose"
+				name="shipDetails[${shipDetail_rowNum - 1}].purpose">
+				<c:choose>
+					<c:when test="${shipDetail.purpose eq '00'}">
+						<option value="00" selected="selected">Original</option>
+						<option value="05">Replace</option>
+						<option value="12">TestData</option>
+					</c:when>
+					<c:when test="${shipDetail.purpose eq '05'}">
+						<option value="00">Original</option>
+						<option value="05" selected="selected">Replace</option>
+						<option value="12">TestData</option>
+					</c:when>
+					<c:when test="${shipDetail.purpose eq '12'}">
+						<option value="00">Original</option>
+						<option value="05">Replace</option>
+						<option value="12" selected="selected">TestData</option>
+					</c:when>
+				</c:choose>
+			</select>
 		</display:column>
 
 		<display:column titleKey="shipDetail.gw">
 			<input type="text" style="margin: 0px; width: 60px;"
+				id="shipDetails[${shipDetail_rowNum - 1}].gw"
 				name="shipDetails[${shipDetail_rowNum - 1}].gw"
 				value="${shipDetail.gw}" class="text medium" />
 		</display:column>
 		<display:column titleKey="shipDetail.nw">
 			<input type="text" style="margin: 0px; width: 60px;"
+				id="shipDetails[${shipDetail_rowNum - 1}].nw"
 				name="shipDetails[${shipDetail_rowNum - 1}].nw"
 				value="${shipDetail.nw}" class="text medium" />
 		</display:column>
 		<display:column titleKey="shipDetail.wt_um">
 			<input type="text" style="margin: 0px; width: 60px;"
+				id="shipDetails[${shipDetail_rowNum - 1}].wt_um"
 				name="shipDetails[${shipDetail_rowNum - 1}].wt_um"
 				value="${shipDetail.wt_um}" class="text medium" />
 		</display:column>
@@ -167,9 +205,16 @@
 	</display:table>
 </s:form>
 <script type="text/javascript">
-	$(document).ready(
-			function() {
-				$("input[type='text']:visible:enabled:first",
-						document.forms['asnForm']).focus();
-			});
+    function calcWeightbyQty(qtyField,rownum) {
+    var qty = qtyField.value;
+  	   var unit_gw = document.getElementById("shipDetails[" +  rownum + "].unit_um").value;
+  	   var unit_nw = document.getElementById("shipDetails[" +  rownum + "].unit_um").value;
+  	   var gw = document.getElementById("shipDetails[" +  rownum + "].gw");
+  	   var nw = document.getElementById("shipDetails[" +  rownum + "].nw");
+  	   if(!isNaN(qty))
+  		  {
+  		   		gw.value = qty * unit_gw;
+  		  		nw.value = qty * unit_nw;
+  		   }
+    }
 </script>

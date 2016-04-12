@@ -7,9 +7,9 @@ import java.util.List;
 
 public class ScheduleBody {
 	private int scheduleItemId;
-	private String itemCode;
-	private String supplierItemCode;
-	private String itemDescription;
+	private String part;
+	private String ford_part;
+	private String partDescription;
 	private String releaseDate;
 	private List<BigDecimal> planQtyList;
 	private List<BigDecimal> totalQtyList;
@@ -26,23 +26,26 @@ public class ScheduleBody {
 		this.scheduleItemId = scheduleItemId;
 	}
 
-	public String getItemCode() {
-		return itemCode;
+
+	public String getPart() {
+		return part;
 	}
-	public void setItemCode(String itemCode) {
-		this.itemCode = itemCode;
+	public void setPart(String part) {
+		this.part = part;
 	}
-	public String getSupplierItemCode() {
-		return supplierItemCode;
+	
+	public String getFord_part() {
+		return ford_part;
 	}
-	public void setSupplierItemCode(String supplierItemCode) {
-		this.supplierItemCode = supplierItemCode;
+	public void setFord_part(String ford_part) {
+		this.ford_part = ford_part;
 	}
-	public String getItemDescription() {
-		return itemDescription;
+	
+	public String getPartDescription() {
+		return partDescription;
 	}
-	public void setItemDescription(String itemDescription) {
-		this.itemDescription = itemDescription;
+	public void setPartDescription(String partDescription) {
+		this.partDescription = partDescription;
 	}
 	public String getReleaseDate() {
 		return releaseDate;
