@@ -71,7 +71,7 @@ public final class FordEDIImpl extends AppObject
 		xxediford_plansum_MetaData11.setFieldDesc(6, "tin1_importdt_to", 0, Parameter.PRO_CHARACTER,5,0);
 		xxediford_plansum_DSMetaData1.addTable(xxediford_plansum_MetaData11);
 		xxediford_plansum_DSMetaData2 = new ProDataGraphMetaData(0, "export_param", 2, ParameterSet.OUTPUT);
-		xxediford_plansum_MetaData21 = new ProDataObjectMetaData("tout1", 7, false, 1, "0,tout1_ver:tout1", null, null);
+		xxediford_plansum_MetaData21 = new ProDataObjectMetaData("tout1", 8, false, 1, "0,tout1_ver:tout1", null, null);
 		xxediford_plansum_MetaData21.setFieldDesc(1, "tout1_ver", 0, Parameter.PRO_CHARACTER,0,0);
 		xxediford_plansum_MetaData21.setFieldDesc(2, "tout1_rlse_dt", 0, Parameter.PRO_CHARACTER,1,0);
 		xxediford_plansum_MetaData21.setFieldDesc(3, "tout1_type", 0, Parameter.PRO_CHARACTER,2,0);
@@ -79,6 +79,7 @@ public final class FordEDIImpl extends AppObject
 		xxediford_plansum_MetaData21.setFieldDesc(5, "tout1_plandt_to", 0, Parameter.PRO_CHARACTER,4,0);
 		xxediford_plansum_MetaData21.setFieldDesc(6, "tout1_import_dt", 0, Parameter.PRO_CHARACTER,5,0);
 		xxediford_plansum_MetaData21.setFieldDesc(7, "tout1_import_tm", 0, Parameter.PRO_CHARACTER,6,0);
+		xxediford_plansum_MetaData21.setFieldDesc(8, "tout1_ver_tp", 0, Parameter.PRO_CHARACTER,7,0);
 		xxediford_plansum_DSMetaData2.addTable(xxediford_plansum_MetaData21);
 
 	}
@@ -146,11 +147,9 @@ public final class FordEDIImpl extends AppObject
 	static
 	{
 		xxediford_shipdet_DSMetaData1 = new ProDataGraphMetaData(0, "input_param", 1, ParameterSet.INPUT);
-		xxediford_shipdet_MetaData11 = new ProDataObjectMetaData("tin3", 4, false, 0, null, null, null);
+		xxediford_shipdet_MetaData11 = new ProDataObjectMetaData("tin3", 2, false, 0, null, null, null);
 		xxediford_shipdet_MetaData11.setFieldDesc(1, "tin3_domain", 0, Parameter.PRO_CHARACTER,0,0);
-		xxediford_shipdet_MetaData11.setFieldDesc(2, "tin3_plandt_fr", 0, Parameter.PRO_CHARACTER,1,0);
-		xxediford_shipdet_MetaData11.setFieldDesc(3, "tin3_plandt_to", 0, Parameter.PRO_CHARACTER,2,0);
-		xxediford_shipdet_MetaData11.setFieldDesc(4, "tin3_ver", 0, Parameter.PRO_CHARACTER,3,0);
+		xxediford_shipdet_MetaData11.setFieldDesc(2, "tin3_ver", 0, Parameter.PRO_CHARACTER,3,0);
 		xxediford_shipdet_DSMetaData1.addTable(xxediford_shipdet_MetaData11);
 		xxediford_shipdet_DSMetaData2 = new ProDataGraphMetaData(0, "export_param", 2, ParameterSet.OUTPUT);
 		xxediford_shipdet_MetaData21 = new ProDataObjectMetaData("tout3", 23, false, 1, "0,tout3_ford_part:tout3", null, null);
@@ -178,6 +177,41 @@ public final class FordEDIImpl extends AppObject
 		xxediford_shipdet_MetaData21.setFieldDesc(22, "tout3_site", 0, Parameter.PRO_CHARACTER,21,0);
 		xxediford_shipdet_MetaData21.setFieldDesc(23, "tout3_loc", 0, Parameter.PRO_CHARACTER,22,0);
 		xxediford_shipdet_DSMetaData2.addTable(xxediford_shipdet_MetaData21);
+
+	}
+	
+	
+	static ProDataGraphMetaData xxediford_shipsum_DSMetaData1;
+
+	static ProDataObjectMetaData xxediford_shipsum_MetaData11;
+
+	static ProDataGraphMetaData xxediford_shipsum_DSMetaData2;
+
+	static ProDataObjectMetaData xxediford_shipsum_MetaData21;
+
+
+	static
+	{
+		xxediford_shipsum_DSMetaData1 = new ProDataGraphMetaData(0, "input_param", 1, ParameterSet.INPUT);
+		xxediford_shipsum_MetaData11 = new ProDataObjectMetaData("tin5", 6, false, 0, null, null, null);
+		xxediford_shipsum_MetaData11.setFieldDesc(1, "tin5_domain", 0, Parameter.PRO_CHARACTER,0,0);
+		xxediford_shipsum_MetaData11.setFieldDesc(2, "tin5_shipto", 0, Parameter.PRO_CHARACTER,1,0);
+		xxediford_shipsum_MetaData11.setFieldDesc(3, "tin5_plandt_fr", 0, Parameter.PRO_CHARACTER,2,0);
+		xxediford_shipsum_MetaData11.setFieldDesc(4, "tin5_plandt_to", 0, Parameter.PRO_CHARACTER,3,0);
+		xxediford_shipsum_MetaData11.setFieldDesc(5, "tin5_importdt_fr", 0, Parameter.PRO_CHARACTER,4,0);
+		xxediford_shipsum_MetaData11.setFieldDesc(6, "tin5_importdt_to", 0, Parameter.PRO_CHARACTER,5,0);
+		xxediford_shipsum_DSMetaData1.addTable(xxediford_shipsum_MetaData11);
+		xxediford_shipsum_DSMetaData2 = new ProDataGraphMetaData(0, "export_param", 2, ParameterSet.OUTPUT);
+		xxediford_shipsum_MetaData21 = new ProDataObjectMetaData("tout5", 8, false, 1, "0,tout1_ver:tout1", null, null);
+		xxediford_shipsum_MetaData21.setFieldDesc(1, "tout5_ver", 0, Parameter.PRO_CHARACTER,0,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(2, "tout5_rlse_dt", 0, Parameter.PRO_CHARACTER,1,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(3, "tout5_type", 0, Parameter.PRO_CHARACTER,2,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(4, "tout5_plandt_fr", 0, Parameter.PRO_CHARACTER,3,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(5, "tout5_plandt_to", 0, Parameter.PRO_CHARACTER,4,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(6, "tout5_import_dt", 0, Parameter.PRO_CHARACTER,5,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(7, "tout5_import_tm", 0, Parameter.PRO_CHARACTER,6,0);
+		xxediford_shipsum_MetaData21.setFieldDesc(8, "tout5_ver_tp", 0, Parameter.PRO_CHARACTER,7,0);
+		xxediford_shipsum_DSMetaData2.addTable(xxediford_shipsum_MetaData21);
 
 	}
 
@@ -344,6 +378,45 @@ public final class FordEDIImpl extends AppObject
 	public static void setXxediford_shipdet_MetaData21(ProDataObjectMetaData xxediford_shipdet_MetaData21) {
 		FordEDIImpl.xxediford_shipdet_MetaData21 = xxediford_shipdet_MetaData21;
 	}
+	
+	public static ProDataGraphMetaData getXxediford_shipsum_DSMetaData1() {
+		return xxediford_shipsum_DSMetaData1;
+	}
+
+
+	public static void setXxediford_shipsum_DSMetaData1(ProDataGraphMetaData xxediford_shipsum_DSMetaData1) {
+		FordEDIImpl.xxediford_shipsum_DSMetaData1 = xxediford_shipsum_DSMetaData1;
+	}
+
+
+	public static ProDataObjectMetaData getXxediford_shipsum_MetaData11() {
+		return xxediford_shipsum_MetaData11;
+	}
+
+
+	public static void setXxediford_shipsum_MetaData11(ProDataObjectMetaData xxediford_shipsum_MetaData11) {
+		FordEDIImpl.xxediford_shipsum_MetaData11 = xxediford_shipsum_MetaData11;
+	}
+
+
+	public static ProDataGraphMetaData getXxediford_shipsum_DSMetaData2() {
+		return xxediford_shipsum_DSMetaData2;
+	}
+
+
+	public static void setXxediford_shipsum_DSMetaData2(ProDataGraphMetaData xxediford_shipsum_DSMetaData2) {
+		FordEDIImpl.xxediford_shipsum_DSMetaData2 = xxediford_shipsum_DSMetaData2;
+	}
+
+
+	public static ProDataObjectMetaData getXxediford_shipsum_MetaData21() {
+		return xxediford_shipsum_MetaData21;
+	}
+
+
+	public static void setXxediford_shipsum_MetaData21(ProDataObjectMetaData xxediford_shipsum_MetaData21) {
+		FordEDIImpl.xxediford_shipsum_MetaData21 = xxediford_shipsum_MetaData21;
+	}
 
 
 	public FordEDIImpl(String     appName,
@@ -481,7 +554,70 @@ public final class FordEDIImpl extends AppObject
 		return (String)(params.getProcedureReturnValue());
 
 	}
+	
+	
+	/* 
+	*/
+	public String xxediford_shipsum(ProDataGraph input_param, ProDataGraphHolder export_param)
+		throws Open4GLException, RunTime4GLException, SystemErrorException
+	{
+		RqContext rqCtx = null;
+		com.progress.open4gl.dynamicapi.ResultSet lastResultSet = null;
 
+		if (isSessionAvailable() == false)
+			throw new Open4GLException(m_notAvailable, null);
+
+		Object outValue;
+		ParameterSet params = new ParameterSet(2);
+
+		// Set up input parameters
+		params.setDataGraphParameter(1, input_param, ParameterSet.INPUT, false);
+
+
+		// Set up input/output parameters
+
+
+		// Set up Out parameters
+		params.setDataGraphParameter(2, null, ParameterSet.OUTPUT, false);
+
+
+		// Setup local MetaSchema if any params are tables
+		MetaSchema xxediford_plansum_MetaSchema = new MetaSchema();
+		xxediford_plansum_MetaSchema.addProDataGraphSchema(xxediford_shipsum_DSMetaData1, 1, ParameterSet.INPUT , false);
+		xxediford_plansum_MetaSchema.addProDataGraphSchema(xxediford_shipsum_DSMetaData2, 2, ParameterSet.OUTPUT , false);
+
+
+		// Set up return type
+		
+
+		// Run procedure
+		rqCtx = runProcedure("xxediford_shipsum.p", params, xxediford_plansum_MetaSchema);
+
+
+		// Get output parameters
+		outValue = params.getOutputParameter(2);
+		export_param.setValue(outValue);
+
+
+		// Session-Managed always returns null
+		if (rqCtx != null)
+		{
+			if (!rqCtx._isStreaming())
+				rqCtx._release();
+			else
+			{
+				// If set, there's a ResultSetHolder parm
+				lastResultSet = null;
+				if (lastResultSet != null)
+					lastResultSet.setRqContext(rqCtx);
+			}
+		}
+
+		// Return output value
+		return (String)(params.getProcedureReturnValue());
+
+	}
+	
 	/* 
 	*/
 	public String xxediford_shipcon(ProDataGraph input_param, ProDataGraphHolder export_param)

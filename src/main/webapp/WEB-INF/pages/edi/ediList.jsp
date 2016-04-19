@@ -57,8 +57,8 @@
 		<display:column property="ver" escapeXml="true"
 			sortable="true" titleKey="edi.ver"
 			url="/edi/editEdi?from=list&cb=${cbValue}"
-			paramId="ver"
-			paramProperty="ver" />
+			paramId="key"
+			paramProperty="key" />
 		<display:column property="rlse_dt" escapeXml="true"
 			sortable="true" titleKey="edi.rlse_dt" />
 		<display:column property="type" escapeXml="true"
@@ -84,26 +84,25 @@
 
 
 	<script>
-		$('#shipto')
-				.typeahead(
-						{
-							ajax : {
-								url : "<c:url value="/services/api/supplys/getShiptoData.json"/>",
-								method : 'get',
-								preDispatch : function(e) {
-									return {
-
-										domain : "${sessionScope.selectedUserPlant}",
-										query : e
-									}
-								},
-								triggerLength : 1
-							},
-							displayField : 'label',
-							valueField : 'value'
-						//onSelect: displayResult
-						});
-		
+	$('#shipto')
+		.typeahead(
+			{
+				ajax : {
+					url : "<c:url value="/services/api/supplys/getSupplyData.json"/>",
+					method : 'get',
+					preDispatch : function(e) {
+						return {
+							domain : "${sessionScope.selectedUserPlant}",
+							usercode : "${pageContext.request.remoteUser}",
+							query : e
+						}
+					},
+					triggerLength : 1
+				},
+				displayField : 'label',
+				valueField : 'value'
+			//onSelect: displayResult
+			});
 		
 		$('#plandt_fr').datepicker({
 			format : "yyyymmdd",

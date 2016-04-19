@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.progress.open4gl.ProDataGraph;
 import com.progress.open4gl.ProDataGraphHolder;
 import com.progress.open4gl.ProDataObject;
@@ -41,7 +43,7 @@ public class EdiAction extends BaseAction {
 	private List<ShipDetail> shipDetails;
 	private Edi edi;
 	private ShipSummary shipSummary;
-	private String ver;
+	private String key;
 	private String plandt_fr;
 	private String plandt_to;
 
@@ -71,12 +73,12 @@ public class EdiAction extends BaseAction {
 		this.edi = edi;
 	}
 
-	public String getVer() {
-		return ver;
+	public String getKey() {
+		return key;
 	}
 
-	public void setVer(String ver) {
-		this.ver = ver;
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	public String getPlandt_fr() {
@@ -131,44 +133,34 @@ public class EdiAction extends BaseAction {
 	public String edit() throws IOException {
 
 		try {
+			edi = new Edi();
+			String[] keyArray = key.split(",");
+			if (keyArray.length == 4) {
+				edi.setVer(keyArray[2]);
+			}
+			if (ConnectQAD()) {
+				ProDataGraph exDataGraph;
+				ProDataGraphHolder outputData = new ProDataGraphHolder();
 
-			if (ver != null) {
+				exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_plandet_DSMetaData1());
 
-				// setEdiAndDetail();
-				//
-				// edi = new Edi();
-				// edi.setVer(ver);
-				// ediDetails = new ArrayList<EdiDetail>();
+				ProDataObject object = exDataGraph.createProDataObject("tin2");
 
-				if (ConnectQAD()) {
-					ProDataGraph exDataGraph;
-					ProDataGraphHolder outputData = new ProDataGraphHolder();
+				String domain = getCurrentDomain();
+				object.setString(0, domain);
+				object.setString(1, key);
 
-					exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_plandet_DSMetaData1());
+				exDataGraph.addProDataObject(object);
 
-					ProDataObject object = exDataGraph.createProDataObject("tin2");
+				yfkssFordEdi.xxediford_plandet(exDataGraph, outputData);
 
-					String domain = getCurrentDomain();
-					object.setString(0, domain);
-					object.setString(1, ver);
+				@SuppressWarnings("unchecked")
+				List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
+						.getProDataObjects("tout2");
+				if (outDataList != null && outDataList.size() > 0) {
 
-					exDataGraph.addProDataObject(object);
-
-					yfkssFordEdi.xxediford_plandet(exDataGraph, outputData);
-
-					@SuppressWarnings("unchecked")
-					List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
-							.getProDataObjects("tout2");
-					if (outDataList != null && outDataList.size() > 0) {
-						edi = new Edi();
-						edi.setVer(ver);
-						scheduleView = QADUtil.ConvertToEdiDetail(outDataList);
-					}
+					scheduleView = QADUtil.ConvertToEdiDetail(outDataList);
 				}
-			} else {
-				edi = new Edi();
-				edi.setVer(ver);
-				ediDetails = new ArrayList<EdiDetail>();
 			}
 
 		} catch (Exception e) {
@@ -251,68 +243,47 @@ public class EdiAction extends BaseAction {
 	public String shipEdit() throws IOException {
 
 		try {
-
-			if (ver != null) {
-
-				if (ConnectQAD()) {
-
-					ProDataGraph exDataGraph;
-					ProDataGraphHolder outputData = new ProDataGraphHolder();
-
-					exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_shipdet_DSMetaData1());
-
-					ProDataObject object = exDataGraph.createProDataObject("tin3");
-					String domain = getCurrentDomain();
-
-					object.setString(0, domain);
-					object.setString(1, plandt_fr);
-					object.setString(2, plandt_to);
-					object.setString(3, ver);
-
-					exDataGraph.addProDataObject(object);
-
-					yfkssFordEdi.xxediford_shipdet(exDataGraph, outputData);
-
-					@SuppressWarnings("unchecked")
-					List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
-							.getProDataObjects("tout3");
-
-					if (shipSummary != null && shipSummary.getHasShipError() != null && shipSummary.getHasShipError()) {
-						shipSummary.setHasShipError(false);
-
-						List<ShipDetail> oldShipDetails = QADUtil.ConvertToShipDetail(outDataList);
-						for (ShipDetail d : shipDetails) {
-							for (ShipDetail o : oldShipDetails) {
-								if (o.getPart().equals(d.getPart())) {
-									// d.setPart(o.getPart());
-									// d.setDesc(o.getDesc());
-									// d.setFord_part(o.getFord_part());
-									// d.setRec_palnt(o.getRec_palnt());
-									// d.setShip_fr(o.getShip_fr());
-									// d.setTt_xpyhddeto_seq(o.getTt_xpyhddeto_seq());
-									// d.setTt_xpyhddeto_partnbr(o.getTt_xpyhddeto_partnbr());
-									// d.setTt_xpyhddeto_partdesc(o.getTt_xpyhddeto_partdesc());
-									// d.setTt_xpyhddeto_supppart(o.getTt_xpyhddeto_supppart());
-									// d.setTt_xpyhddeto_uom(o.getTt_xpyhddeto_uom());
-									// d.setTt_xpyhddeto_spq(o.getTt_xpyhddeto_spq());
-									// d.setTt_xpyhddeto_toloc(o.getTt_xpyhddeto_toloc());
-									// d.setTt_xpyhddeto_openqty(o.getTt_xpyhddeto_openqty());
-									break;
-								}
-							}
-						}
-					} else {
-						shipSummary = new ShipSummary();
-						shipSummary.setVer(ver);
-						shipDetails = QADUtil.ConvertToShipDetail(outDataList);
-
-					}
-				}
-			} else {
+			
+			if(shipSummary == null)
+			{
 				shipSummary = new ShipSummary();
-				shipSummary.setVer(ver);
-				shipDetails = new ArrayList<ShipDetail>();
-				// setShipDetail();
+				shipSummary.setKey(key);
+			}
+			
+			String[] keyArray = key.split(",");
+			if (keyArray.length == 4) {
+				shipSummary.setVer(keyArray[2]);
+			}
+			
+			if (ConnectQAD()) {
+
+				ProDataGraph exDataGraph;
+				ProDataGraphHolder outputData = new ProDataGraphHolder();
+
+				exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_shipdet_DSMetaData1());
+
+				ProDataObject object = exDataGraph.createProDataObject("tin3");
+				String domain = getCurrentDomain();
+
+				object.setString(0, domain);
+				object.setString(1, key);
+
+				exDataGraph.addProDataObject(object);
+
+				yfkssFordEdi.xxediford_shipdet(exDataGraph, outputData);
+
+				@SuppressWarnings("unchecked")
+				List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
+						.getProDataObjects("tout3");
+
+				if (shipSummary != null && shipSummary.getHasShipError() != null && shipSummary.getHasShipError()) {
+					shipSummary.setHasShipError(false);
+
+				} else {
+					
+					shipDetails = QADUtil.ConvertToShipDetail(outDataList);
+
+				}
 			}
 
 		} catch (Exception e) {
@@ -400,7 +371,7 @@ public class EdiAction extends BaseAction {
 
 		} catch (ShipNotValidException ex) {
 			addActionError(ex.getMessage());
-			ver = shipSummary.getVer();
+			key = shipSummary.getKey();
 			shipSummary.setHasShipError(true);
 			shipEdit();
 			return INPUT;
@@ -411,146 +382,15 @@ public class EdiAction extends BaseAction {
 		return SUCCESS;
 	}
 
-	private void query1() {
-		edis = new ArrayList<Edi>();
-		Edi newEdi = new Edi();
-		newEdi.setVer("1001");
-		newEdi.setPlandt("2016/04/01~2016/04/30");
-		newEdi.setRlse_dt("2016/03/01");
-		newEdi.setImport_dt("2016/03/10 08:00:25");
-		newEdi.setType("天");
-		edis.add(newEdi);
-	}
-
-	private void query2() {
-		shipSummarys = new ArrayList<ShipSummary>();
-		ShipSummary newShipSummary = new ShipSummary();
-		newShipSummary.setVer("1001");
-		newShipSummary.setPlandt("2016/04/01~2016/04/30");
-		newShipSummary.setRlse_dt("2016/03/01");
-		newShipSummary.setImport_dt("2016/03/10 08:00:25");
-		newShipSummary.setType("天");
-		shipSummarys.add(newShipSummary);
-	}
-
-	private void setShipDetail() {
-		shipSummary = new ShipSummary();
-		shipSummary.setVer(ver);
-
-		shipDetails = new ArrayList<ShipDetail>();
-		ShipDetail sd1 = new ShipDetail();
-		sd1.setId(1001);
-		sd1.setPart("10001");
-		sd1.setDesc("测试物料1");
-		sd1.setFord_part("Ford001");
-		sd1.setUm("EA");
-		sd1.setPurpose("05");
-		sd1.setPlan_qty(new BigDecimal(100));
-		sd1.setCum_ship(new BigDecimal(200));
-		shipDetails.add(sd1);
-
-		ShipDetail sd2 = new ShipDetail();
-		sd1.setId(1002);
-		sd2.setPart("10002");
-		sd2.setDesc("测试物料2");
-		sd2.setFord_part("Ford002");
-		sd2.setUm("EA");
-		sd2.setPurpose("12");
-		sd2.setPlan_qty(new BigDecimal(200));
-		sd2.setCum_ship(new BigDecimal(300));
-		shipDetails.add(sd2);
-	}
-
-	private void setEdiAndDetail() {
-
-		scheduleView = new ScheduleView();
-
-		ScheduleHead scheduleHead = new ScheduleHead();
-		List<ScheduleBody> scheduleBodyList = new ArrayList<ScheduleBody>();
-		List<Map<String, Object>> headList = new ArrayList<Map<String, Object>>();
-
-		Map<String, Object> head1 = new HashMap<String, Object>();
-		head1.put("scheduleType", "Firm");
-		head1.put("dateFrom", "2016-04-10");
-		head1.put("dateTo", "2016-04-10");
-		headList.add(head1);
-
-		Map<String, Object> head2 = new HashMap<String, Object>();
-		head2.put("scheduleType", "Firm");
-		head2.put("dateFrom", "2016-04-11");
-		head2.put("dateTo", "2016-04-11");
-		headList.add(head2);
-
-		Map<String, Object> head3 = new HashMap<String, Object>();
-		head3.put("scheduleType", "Firm");
-		head3.put("dateFrom", "2016-04-13");
-		head3.put("dateTo", "2016-04-13");
-		headList.add(head3);
-
-		scheduleHead.setHeadList(headList);
-
-		ScheduleBody sb1 = new ScheduleBody();
-		sb1.setPart("100001");
-		sb1.setPartDescription("测试零件号1");
-		sb1.setFord_part("Ford001");
-		sb1.setReleaseDate("2016-04-10");
-		sb1.setUm("EA");
-		List<BigDecimal> planQtyList1 = new ArrayList<BigDecimal>();
-		planQtyList1.add(new BigDecimal(101));
-		planQtyList1.add(new BigDecimal(102));
-		planQtyList1.add(new BigDecimal(103));
-		sb1.setPlanQtyList(planQtyList1);
-		scheduleBodyList.add(sb1);
-
-		ScheduleBody sb2 = new ScheduleBody();
-		sb2.setPart("100001");
-		sb1.setUm("EA");
-		sb2.setPartDescription("测试零件号1");
-		sb2.setFord_part("Ford001");
-		sb2.setReleaseDate("2016-04-10");
-		List<BigDecimal> totalQtyList1 = new ArrayList<BigDecimal>();
-		totalQtyList1.add(new BigDecimal(101));
-		totalQtyList1.add(new BigDecimal(203));
-		totalQtyList1.add(new BigDecimal(306));
-		sb2.setTotalQtyList(totalQtyList1);
-		scheduleBodyList.add(sb2);
-
-		ScheduleBody sb3 = new ScheduleBody();
-		sb3.setPart("100002");
-		sb3.setPartDescription("测试零件号2");
-		sb3.setFord_part("Ford002");
-		sb3.setReleaseDate("2016-04-11");
-		sb1.setUm("EA");
-		List<BigDecimal> planQtyList2 = new ArrayList<BigDecimal>();
-		planQtyList2.add(new BigDecimal(101));
-		planQtyList2.add(new BigDecimal(102));
-		planQtyList2.add(new BigDecimal(103));
-		sb3.setPlanQtyList(planQtyList2);
-		scheduleBodyList.add(sb3);
-
-		ScheduleBody sb4 = new ScheduleBody();
-		sb4.setPart("100002");
-		sb4.setPartDescription("测试零件号2");
-		sb4.setFord_part("Ford002");
-		sb4.setReleaseDate("2016-04-11");
-		sb1.setUm("EA");
-		List<BigDecimal> totalQtyList2 = new ArrayList<BigDecimal>();
-		totalQtyList2.add(new BigDecimal(201));
-		totalQtyList2.add(new BigDecimal(303));
-		totalQtyList2.add(new BigDecimal(406));
-		sb4.setTotalQtyList(totalQtyList2);
-		scheduleBodyList.add(sb4);
-
-		scheduleView.setScheduleBodyList(scheduleBodyList);
-		scheduleView.setScheduleHead(scheduleHead);
-
-	}
 
 	private void query() {
 		try {
 			if (ConnectQAD()) {
 
 				String domain = getCurrentDomain();
+
+				List<String> shipToCodeList = getSupplierCodeList(edi != null ? edi.getShipto() : "");
+				String shipTo = StringUtils.join(shipToCodeList.toArray(), ",");
 
 				ProDataGraph exDataGraph; // 输入参数
 				ProDataGraphHolder outputData = new ProDataGraphHolder(); // 输出参数
@@ -560,7 +400,7 @@ public class EdiAction extends BaseAction {
 				ProDataObject objectMstr = exDataGraph.createProDataObject("tin1");
 				if (edi != null) {
 					objectMstr.setString(0, domain);
-					objectMstr.setString(1, edi.getShipto() == null ? "" : edi.getShipto().trim());
+					objectMstr.setString(1, shipTo);
 					objectMstr.setString(2, edi.getPlandt_fr() == null ? "" : edi.getPlandt_fr().trim());
 					objectMstr.setString(3, edi.getPlandt_to() == null ? "" : edi.getPlandt_to().trim());
 					objectMstr.setString(4, edi.getImportdt_fr() == null ? "" : edi.getImportdt_fr().trim());
@@ -592,15 +432,18 @@ public class EdiAction extends BaseAction {
 
 				String domain = getCurrentDomain();
 
+				List<String> shipToCodeList = getSupplierCodeList(edi != null ? edi.getShipto() : "");
+				String shipTo = StringUtils.join(shipToCodeList.toArray(), ",");
+
 				ProDataGraph exDataGraph; // 输入参数
 				ProDataGraphHolder outputData = new ProDataGraphHolder(); // 输出参数
 
-				exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_plansum_DSMetaData1());
+				exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_shipsum_DSMetaData1());
 
-				ProDataObject objectMstr = exDataGraph.createProDataObject("tin1");
+				ProDataObject objectMstr = exDataGraph.createProDataObject("tin5");
 				if (shipSummary != null) {
 					objectMstr.setString(0, domain);
-					objectMstr.setString(1, shipSummary.getShipto() == null ? "" : shipSummary.getShipto().trim());
+					objectMstr.setString(1, shipTo);
 					objectMstr.setString(2,
 							shipSummary.getPlandt_fr() == null ? "" : shipSummary.getPlandt_fr().trim());
 					objectMstr.setString(3,
@@ -614,11 +457,11 @@ public class EdiAction extends BaseAction {
 
 				exDataGraph.addProDataObject(objectMstr);
 
-				yfkssFordEdi.xxediford_plansum(exDataGraph, outputData);
+				yfkssFordEdi.xxediford_shipsum(exDataGraph, outputData);
 
 				@SuppressWarnings("unchecked")
 				List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
-						.getProDataObjects("tout1");
+						.getProDataObjects("tout5");
 
 				shipSummarys = QADUtil.ConverToShipSummary(outDataList);
 
@@ -663,7 +506,7 @@ public class EdiAction extends BaseAction {
 						args.add(String.valueOf(d.getPart()));
 						throw new ShipNotValidException(getText("edi.trans_method_empty_error", args));
 					}
-					if (d.getConv_nbr().equals("") ) {
+					if (d.getConv_nbr().equals("")) {
 						args.add(String.valueOf(d.getPart()));
 						throw new ShipNotValidException(getText("edi.conv_nbr_empty_error", args));
 					}
@@ -713,41 +556,39 @@ public class EdiAction extends BaseAction {
 						args.add(String.valueOf(d.getPart()));
 						throw new ShipNotValidException(getText("edi.units_per_empty", args));
 					}
-					try{
-					BigDecimal units_per = new BigDecimal(d.getUnits_per());
-					if (units_per instanceof BigDecimal == false) {
-						args.add(String.valueOf(d.getPart()));
-						throw new ShipNotValidException(getText("edi.units_per_format_error", args));
-					}
-					if (units_per.compareTo(BigDecimal.ZERO) < 1) {
-						args.add(String.valueOf(d.getPart()));
-						throw new ShipNotValidException(getText("edi.units_per_less_than_zero", args));
-					}
+					try {
+						BigDecimal units_per = new BigDecimal(d.getUnits_per());
+						if (units_per instanceof BigDecimal == false) {
+							args.add(String.valueOf(d.getPart()));
+							throw new ShipNotValidException(getText("edi.units_per_format_error", args));
+						}
+						if (units_per.compareTo(BigDecimal.ZERO) < 1) {
+							args.add(String.valueOf(d.getPart()));
+							throw new ShipNotValidException(getText("edi.units_per_less_than_zero", args));
+						}
 					} catch (NumberFormatException e) {
 						args.add(d.getPart());
 						throw new ShipNotValidException(getText("edi.units_per_format_error", args));
 					}
 
-
 					if (d.getLading_qty().equals("")) {
 						args.add(String.valueOf(d.getPart()));
 						throw new ShipNotValidException(getText("edi.lading_qty_empty", args));
 					}
-					try{
-					Integer ladingQty = Integer.parseInt(d.getLading_qty());
-					if (ladingQty instanceof Integer == false) {
-						args.add(String.valueOf(d.getPart()));
-						throw new ShipNotValidException(getText("edi.lading_qty_format_error", args));
-					}
-					if (ladingQty <= 0) {
-						args.add(String.valueOf(d.getPart()));
-						throw new ShipNotValidException(getText("edi.lading_qty_less_than_zero", args));
-					}
-					}catch (NumberFormatException e) {
+					try {
+						Integer ladingQty = Integer.parseInt(d.getLading_qty());
+						if (ladingQty instanceof Integer == false) {
+							args.add(String.valueOf(d.getPart()));
+							throw new ShipNotValidException(getText("edi.lading_qty_format_error", args));
+						}
+						if (ladingQty <= 0) {
+							args.add(String.valueOf(d.getPart()));
+							throw new ShipNotValidException(getText("edi.lading_qty_less_than_zero", args));
+						}
+					} catch (NumberFormatException e) {
 						args.add(d.getPart());
 						throw new ShipNotValidException(getText("edi.lading_qty_format_error", args));
 					}
-
 
 					BigDecimal shipQty = new BigDecimal(d.getShip_qty());
 					if (shipQty instanceof BigDecimal == false) {

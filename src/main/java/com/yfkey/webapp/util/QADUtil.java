@@ -50,7 +50,7 @@ public final class QADUtil {
 				edi.setType(o.getString("tout1_type"));
 				edi.setPlandt(o.getString("tout1_plandt_fr") + "~" + o.getString("tout1_plandt_to"));
 				edi.setImport_dt(o.getString("tout1_import_dt") + " " + o.getString("tout1_import_tm"));
-
+				edi.setKey(o.getString("tout1_ver_tp"));
 				ediList.add(edi);
 			}
 		}
@@ -150,11 +150,12 @@ public final class QADUtil {
 		if (proDataObjectList != null && proDataObjectList.size() > 0) {
 			for (ProDataObject o : proDataObjectList) {
 				ShipSummary shipSummary = new ShipSummary();
-				shipSummary.setVer(o.getString("tout1_ver"));
-				shipSummary.setRlse_dt(o.getString("tout1_rlse_dt"));
-				shipSummary.setType(o.getString("tout1_type"));
-				shipSummary.setPlandt(o.getString("tout1_plandt_fr") + "~" + o.getString("tout1_plandt_to"));
-				shipSummary.setImport_dt(o.getString("tout1_import_dt") + " " + o.getString("tout1_import_tm"));
+				shipSummary.setVer(o.getString("tout5_ver"));
+				shipSummary.setRlse_dt(o.getString("tout5_rlse_dt"));
+				shipSummary.setType(o.getString("tout5_type"));
+				shipSummary.setPlandt(o.getString("tout5_plandt_fr") + "~" + o.getString("tout5_plandt_to"));
+				shipSummary.setImport_dt(o.getString("tout5_import_dt") + " " + o.getString("tout5_import_tm"));
+				shipSummary.setKey(o.getString("tout5_ver_tp"));
 				ediList.add(shipSummary);
 			}
 		}

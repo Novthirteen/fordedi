@@ -21,7 +21,7 @@ public class Edi extends BaseObject {
 	private String import_dt; // 导入日期
 	private String plandt; // 计划日期
 	
-
+    private String key; //主键
 
 	public String getDomain() {
 		return domain;
@@ -110,6 +110,14 @@ public class Edi extends BaseObject {
 
 	public void setPlandt(String plandt) {
 		this.plandt = plandt;
+	}
+
+	public String getKey() {
+		return key;
+	}
+
+	public void setKey(String key) {
+		this.key = key;
 	}
 
 	@Override

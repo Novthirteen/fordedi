@@ -237,6 +237,16 @@ public class FordEDI implements SDOFactory
 	{
 		return m_FordEDIImpl.xxediford_plansum( input_param,  export_param);
 	}
+	
+	/**
+	*	
+	*	
+	*/
+	public String xxediford_shipsum(ProDataGraph input_param, ProDataGraphHolder export_param)
+		throws Open4GLException, RunTime4GLException, SystemErrorException
+	{
+		return m_FordEDIImpl.xxediford_shipsum( input_param,  export_param);
+	}
 
 	/**
 	*	

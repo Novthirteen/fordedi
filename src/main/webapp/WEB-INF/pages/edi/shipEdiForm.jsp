@@ -16,6 +16,7 @@
 		<div class="col-xs-4 search-group">
 			<s:textfield key="shipSummary.ver" cssClass="form-control"
 				readonly="true" />
+				<s:hidden key="shipSummary.key"/>
 		</div>
 		<div class="col-xs-4 search-group"></div>
 	</div>
@@ -101,6 +102,8 @@
 				value="${shipDetail.unit_gw}" />
 			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_nw"
 				value="${shipDetail.unit_nw}" />
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].equip"
+				value="${shipDetail.equip}" />
 		</display:column>
 		<display:column titleKey="shipDetail.um">
 			<input type="text" style="margin: 0px; width: 60px;"

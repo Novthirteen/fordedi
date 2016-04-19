@@ -172,7 +172,7 @@ public class UserAction extends BaseAction implements Preparable {
 		List<LabelValue> permissionTypeList = new ArrayList<LabelValue>();
 		permissionTypeList.add(new LabelValue(PermissionType.U.toString(), getText("permission.url")));
 		permissionTypeList.add(new LabelValue(PermissionType.B.toString(), getText("permission.button")));
-		permissionTypeList.add(new LabelValue(PermissionType.S.toString(), getText("permission.supplier")));
+		permissionTypeList.add(new LabelValue(PermissionType.S.toString(), getText("permission.shipto")));
 		permissionTypeList.add(new LabelValue(PermissionType.P.toString(), getText("permission.plant")));
 
 		return permissionTypeList;

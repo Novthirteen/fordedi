@@ -9,14 +9,16 @@
 		<fmt:message key="shipSummaryList.heading" />
 	</h2>
 
-	<s:form name="shipSummaryForm" action="shipEdis" method="post" validate="true">
+	<s:form name="shipSummaryForm" action="shipEdis" method="post"
+		validate="true">
 		<div class="row">
 			<div class="col-xs-3 search-group">
-				<label class="control-label"><fmt:message key="shipSummary.shipto" /></label>
-				<input id="shipto" name="shipSummary.shipto" value="${shipSummary.shipto}"
-					type="text" class="col-md-12 form-control search-control"
-					placeholder="" autocomplete="off" /> <input type="hidden"
-					name="cb" value="${cbValue}">
+				<label class="control-label"><fmt:message
+						key="shipSummary.shipto" /></label> <input id="shipto"
+					name="shipSummary.shipto" value="${shipSummary.shipto}" type="text"
+					class="col-md-12 form-control search-control" placeholder=""
+					autocomplete="off" /> <input type="hidden" name="cb"
+					value="${cbValue}">
 			</div>
 			<div class="col-xs-3 search-group">
 				<s:textfield cssClass="form-control search-control" id="plandt_fr"
@@ -51,25 +53,25 @@
 	<hr>
 
 	<display:table name="shipSummarys" cellspacing="0" cellpadding="0"
-		requestURI="shipSummarys" defaultsort="1" id="shipSummary" pagesize="0"
-		class="table table-condensed table-striped table-hover" export="false">
-	
-		<display:column property="ver" escapeXml="true"
-			sortable="true" titleKey="shipSummary.ver"
-			url="/edi/editShipEdi?from=list&cb=${cbValue}&plandt_fr=${plandt_fr}&plandt_to=${plandt_to}"
-			paramId="ver"
-			paramProperty="ver" />
-		<display:column property="rlse_dt" escapeXml="true"
-			sortable="true" titleKey="shipSummary.rlse_dt" />
-		<display:column property="type" escapeXml="true"
-			sortable="true" titleKey="shipSummary.type" />
-		
-		<display:column property="plandt" escapeXml="true"
-			sortable="true" titleKey="shipSummary.plandt" />
-		
-		<display:column property="import_dt" escapeXml="true"
-			sortable="true" titleKey="shipSummary.import_dt" />
-		
+		requestURI="shipSummarys" defaultsort="1" id="shipSummary"
+		pagesize="0" class="table table-condensed table-striped table-hover"
+		export="false">
+
+		<display:column property="ver" escapeXml="true" sortable="true"
+			titleKey="shipSummary.ver"
+			url="/edi/editShipEdi?from=list&cb=${cbValue}"
+			paramId="key" paramProperty="key" />
+		<display:column property="rlse_dt" escapeXml="true" sortable="true"
+			titleKey="shipSummary.rlse_dt" />
+		<display:column property="type" escapeXml="true" sortable="true"
+			titleKey="shipSummary.type" />
+
+		<display:column property="plandt" escapeXml="true" sortable="true"
+			titleKey="shipSummary.plandt" />
+
+		<display:column property="import_dt" escapeXml="true" sortable="true"
+			titleKey="shipSummary.import_dt" />
+
 
 		<display:setProperty name="paging.banner.placement" value="both" />
 		<display:setProperty name="paging.banner.item_name">
@@ -78,7 +80,8 @@
 		<display:setProperty name="paging.banner.items_name">
 			<fmt:message key="shipSummaryList.shipSummarys" />
 		</display:setProperty>
-		<display:setProperty name="export.excel.filename" value="ShipSummary List.xls" />
+		<display:setProperty name="export.excel.filename"
+			value="ShipSummary List.xls" />
 
 		<display:setProperty name="export.pdf" value="false" />
 		<display:setProperty name="export.excel" value="true" />
@@ -93,12 +96,12 @@
 				.typeahead(
 						{
 							ajax : {
-								url : "<c:url value="/services/api/supplys/getShiptoData.json"/>",
+								url : "<c:url value="/services/api/supplys/getSupplyData.json"/>",
 								method : 'get',
 								preDispatch : function(e) {
 									return {
-
 										domain : "${sessionScope.selectedUserPlant}",
+										usercode : "${pageContext.request.remoteUser}",
 										query : e
 									}
 								},
@@ -108,7 +111,7 @@
 							valueField : 'value'
 						//onSelect: displayResult
 						});
-		
+
 		$('#plandt_fr').datepicker({
 			format : "yyyymmdd",
 			language : "${pageContext.response.locale}",
@@ -122,7 +125,7 @@
 			autoclose : true,
 			todayHighlight : true
 		});
-		
+
 		$('#importdt_fr').datepicker({
 			format : "yyyymmdd",
 			language : "${pageContext.response.locale}",

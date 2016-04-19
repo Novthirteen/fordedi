@@ -24,6 +24,8 @@ public class ShipSummary extends BaseObject {
 	
 	private Boolean hasShipError;//发货错误
 	
+	private String key; //主鍵
+	
 	public String getDomain() {
 		return domain;
 	}
@@ -99,6 +101,14 @@ public class ShipSummary extends BaseObject {
 	}
 	public void setPlandt(String plandt) {
 		this.plandt = plandt;
+	}
+	
+	
+	public String getKey() {
+		return key;
+	}
+	public void setKey(String key) {
+		this.key = key;
 	}
 	@Override
 	public int hashCode() {
