@@ -16,11 +16,17 @@
 		<div class="col-xs-4 search-group">
 			<s:label key="edi.ver" cssClass="form-control" readonly="true" />
 			<s:hidden key="edi.ver" />
+			<s:hidden key="edi.key" />
 		</div>
 		<div class="col-xs-4 search-group"></div>
 	</div>
 	<hr>
 	<div id="actions" class="form-group form-actions">
+		<s:submit type="button" cssClass="btn btn-primary" action="exportEdi"
+			key="button.print" theme="simple">
+			<i class="icon-print icon-white"></i>
+			<fmt:message key="button.export" />
+		</s:submit>
 		<s:submit type="button" cssClass="btn" method="cancel"
 			key="button.back" theme="simple">
 			<i class=" icon-arrow-left"></i>
@@ -40,7 +46,7 @@
 			<s:iterator id="head" value="%{scheduleView.scheduleHead.headList}">
 
 				<th>${head.dateFrom}</th>
-			
+
 			</s:iterator>
 
 		</tr>

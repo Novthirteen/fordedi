@@ -53,9 +53,9 @@
 	<hr>
 
 	<display:table name="shipSummarys" cellspacing="0" cellpadding="0"
-		requestURI="shipSummarys" defaultsort="1" id="shipSummary"
+		requestURI="shipEdis" defaultsort="1" id="shipSummary"
 		pagesize="0" class="table table-condensed table-striped table-hover"
-		export="false">
+		export="true">
 
 		<display:column property="ver" escapeXml="true" sortable="true"
 			titleKey="shipSummary.ver"

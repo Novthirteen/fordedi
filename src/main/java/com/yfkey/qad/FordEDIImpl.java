@@ -149,7 +149,7 @@ public final class FordEDIImpl extends AppObject
 		xxediford_shipdet_DSMetaData1 = new ProDataGraphMetaData(0, "input_param", 1, ParameterSet.INPUT);
 		xxediford_shipdet_MetaData11 = new ProDataObjectMetaData("tin3", 2, false, 0, null, null, null);
 		xxediford_shipdet_MetaData11.setFieldDesc(1, "tin3_domain", 0, Parameter.PRO_CHARACTER,0,0);
-		xxediford_shipdet_MetaData11.setFieldDesc(2, "tin3_ver", 0, Parameter.PRO_CHARACTER,3,0);
+		xxediford_shipdet_MetaData11.setFieldDesc(2, "tin3_ver", 0, Parameter.PRO_CHARACTER,1,0);
 		xxediford_shipdet_DSMetaData1.addTable(xxediford_shipdet_MetaData11);
 		xxediford_shipdet_DSMetaData2 = new ProDataGraphMetaData(0, "export_param", 2, ParameterSet.OUTPUT);
 		xxediford_shipdet_MetaData21 = new ProDataObjectMetaData("tout3", 23, false, 1, "0,tout3_ford_part:tout3", null, null);

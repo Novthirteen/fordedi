@@ -24,6 +24,7 @@
 	<bean id="ediAction" class="com.yfkey.webapp.action.EdiAction"
 		scope="prototype">
 		<property name="universalManager" ref="universalManager" />
+		 <property name="ediManager" ref="ediManager"/>
 	</bean>
 
 	<bean id="fileUploadAction" class="com.yfkey.webapp.action.FileUploadAction"

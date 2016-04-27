@@ -1,6 +1,7 @@
 package com.yfkey.webapp.action;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -18,6 +19,8 @@ import com.progress.open4gl.ProDataObject;
 import com.yfkey.model.ShipDetail;
 import com.yfkey.model.ShipSummary;
 import com.yfkey.qad.FordEDIImpl;
+import com.yfkey.service.EdiManager;
+import com.yfkey.service.UserManager;
 import com.yfkey.webapp.util.QADUtil;
 import com.yfkey.exception.ShipNotValidException;
 import com.yfkey.exception.SupplierAuthorityException;
@@ -46,6 +49,10 @@ public class EdiAction extends BaseAction {
 	private String key;
 	private String plandt_fr;
 	private String plandt_to;
+
+	private InputStream inputStream;
+	private String fileName;
+	private EdiManager ediManager;
 
 	private ScheduleView scheduleView;
 
@@ -129,13 +136,38 @@ public class EdiAction extends BaseAction {
 		this.scheduleView = scheduleView;
 	}
 
+	public InputStream getInputStream() {
+		return inputStream;
+	}
+
+	public void setInputStream(InputStream inputStream) {
+		this.inputStream = inputStream;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public EdiManager getEdiManager() {
+		return ediManager;
+	}
+
+	public void setEdiManager(EdiManager ediManager) {
+		this.ediManager = ediManager;
+	}
+
 	@SuppressWarnings("unchecked")
 	public String edit() throws IOException {
 
 		try {
 			edi = new Edi();
+			edi.setKey(key);
 			String[] keyArray = key.split(",");
-			if (keyArray.length == 4) {
+			if (keyArray.length >= 3) {
 				edi.setVer(keyArray[2]);
 			}
 			if (ConnectQAD()) {
@@ -243,18 +275,17 @@ public class EdiAction extends BaseAction {
 	public String shipEdit() throws IOException {
 
 		try {
-			
-			if(shipSummary == null)
-			{
+
+			if (shipSummary == null) {
 				shipSummary = new ShipSummary();
 				shipSummary.setKey(key);
 			}
-			
+
 			String[] keyArray = key.split(",");
-			if (keyArray.length == 4) {
+			if (keyArray.length >= 3) {
 				shipSummary.setVer(keyArray[2]);
 			}
-			
+
 			if (ConnectQAD()) {
 
 				ProDataGraph exDataGraph;
@@ -280,7 +311,7 @@ public class EdiAction extends BaseAction {
 					shipSummary.setHasShipError(false);
 
 				} else {
-					
+
 					shipDetails = QADUtil.ConvertToShipDetail(outDataList);
 
 				}
@@ -348,18 +379,11 @@ public class EdiAction extends BaseAction {
 				List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
 						.getProDataObjects("tout4");
 
-				// List<Object> args = new ArrayList<Object>();
-
-				// if (outDataList != null && outDataList.size() > 0) {
-				// ProDataObject p = outDataList.get(0);
-				// String suc = ;
-				// args.add(suc);
-				// }
 				if (outDataList != null && outDataList.size() > 0) {
 					ProDataObject p = outDataList.get(0);
 					Boolean isSuccess = p.getBoolean("tout4_suc");
 					if (isSuccess) {
-						saveMessage(getText("edi.ship.success"));
+						saveMessage(getText("edi.shipsuccess"));
 					} else {
 						String errorMsg = p.getString("tout4_err");
 						throw new ShipNotValidException(errorMsg);
@@ -382,6 +406,52 @@ public class EdiAction extends BaseAction {
 		return SUCCESS;
 	}
 
+	public String exportEdiDetailsToExcel() throws Exception {
+
+		try {
+			
+			if (ConnectQAD()) {
+				ProDataGraph exDataGraph;
+				ProDataGraphHolder outputData = new ProDataGraphHolder();
+
+				exDataGraph = new ProDataGraph(yfkssFordEdi.m_FordEDIImpl.getXxediford_plandet_DSMetaData1());
+
+				ProDataObject object = exDataGraph.createProDataObject("tin2");
+
+				String domain = getCurrentDomain();
+				object.setString(0, domain);
+				object.setString(1, edi.getKey());
+
+				exDataGraph.addProDataObject(object);
+
+				yfkssFordEdi.xxediford_plandet(exDataGraph, outputData);
+
+				@SuppressWarnings("unchecked")
+				List<ProDataObject> outDataList = (List<ProDataObject>) outputData.getProDataGraphValue()
+						.getProDataObjects("tout2");
+				if (outDataList != null && outDataList.size() > 0) {
+
+					scheduleView = QADUtil.ConvertToEdiDetail(outDataList);
+				}
+
+				List<String> headTitleList = new ArrayList<String>();
+				headTitleList.add(getText("ediDetail.rlse_dt"));
+				headTitleList.add(getText("ediDetail.part"));
+				headTitleList.add(getText("ediDetail.desc"));
+				headTitleList.add(getText("ediDetail.ford_part"));
+				headTitleList.add(getText("scheduleDetail.um"));
+
+				inputStream = this.ediManager.exportEdiDetails(scheduleView, headTitleList);
+
+				fileName = "EdiDetails.xls";
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return SUCCESS;
+	}
 
 	private void query() {
 		try {

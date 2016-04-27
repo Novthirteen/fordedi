@@ -52,7 +52,7 @@
 
 	<display:table name="edis" cellspacing="0" cellpadding="0"
 		requestURI="edis" defaultsort="1" id="edi" pagesize="0"
-		class="table table-condensed table-striped table-hover" export="false">
+		class="table table-condensed table-striped table-hover" export="true">
 	
 		<display:column property="ver" escapeXml="true"
 			sortable="true" titleKey="edi.ver"
@@ -78,6 +78,14 @@
 		<display:setProperty name="paging.banner.items_name">
 			<fmt:message key="ediList.edis" />
 		</display:setProperty>
+		
+			<display:setProperty name="export.excel.filename"
+			value="Edi List.xls" />
+
+		<display:setProperty name="export.pdf" value="false" />
+		<display:setProperty name="export.excel" value="true" />
+		<display:setProperty name="export.csv" value="false" />
+		<display:setProperty name="export.xml" value="false" />
 		
 	</display:table>
 

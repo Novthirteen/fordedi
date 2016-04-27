@@ -222,6 +222,15 @@
 			</result>
 		</action>
 		
+		<action name="exportEdi" class="ediAction" method="exportEdiDetailsToExcel">
+			<result name="success" type="stream">
+				<param name="contentType">application/vnd.ms-excel</param> 
+				<param name="inputName">inputStream</param>
+				<param name="contentDisposition">attachment;filename="${fileName}"</param>
+				<param name="bufferSize">4096</param>
+			</result>
+		</action>
+		
 		<action name="shipEdis" class="ediAction"
 			method="shipEdilist">
 			<result name="success">/WEB-INF/pages/edi/shipEdiList.jsp
