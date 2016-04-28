@@ -2,7 +2,7 @@
 
 <head>
 <title><fmt:message key="shipSummaryList.title" /></title>
-<meta name="menu" content="AsnMenu" />
+<meta name="menu" content="EdiMenu" />
 </head>
 
 <h2>
@@ -98,9 +98,9 @@
 				value="${shipDetail.site}" />
 			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].loc"
 				value="${shipDetail.loc}" />
-			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_gw"
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_gw" id="shipDetails[${shipDetail_rowNum - 1}].unit_gw"
 				value="${shipDetail.unit_gw}" />
-			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_nw"
+			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].unit_nw" id="shipDetails[${shipDetail_rowNum - 1}].unit_nw" 
 				value="${shipDetail.unit_nw}" />
 			<input type="hidden" name="shipDetails[${shipDetail_rowNum - 1}].equip"
 				value="${shipDetail.equip}" />
@@ -209,9 +209,10 @@
 </s:form>
 <script type="text/javascript">
     function calcWeightbyQty(qtyField,rownum) {
+    	
     var qty = qtyField.value;
-  	   var unit_gw = document.getElementById("shipDetails[" +  rownum + "].unit_um").value;
-  	   var unit_nw = document.getElementById("shipDetails[" +  rownum + "].unit_um").value;
+  	   var unit_gw = document.getElementById("shipDetails[" +  rownum + "].unit_gw").value;
+  	   var unit_nw = document.getElementById("shipDetails[" +  rownum + "].unit_nw").value;
   	   var gw = document.getElementById("shipDetails[" +  rownum + "].gw");
   	   var nw = document.getElementById("shipDetails[" +  rownum + "].nw");
   	   if(!isNaN(qty))

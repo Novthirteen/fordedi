@@ -178,8 +178,8 @@ public final class QADUtil {
 				shipDetail.setCum_ship(o.getBigDecimal("tout3_cum_ship"));
 				shipDetail.setUm(o.getString("tout3_um"));
 				shipDetail.setPurpose(o.getString("tout3_purpose"));
-				shipDetail.setGw(o.getBigDecimal("tout3_unit_gw").toString());
-				shipDetail.setNw(o.getBigDecimal("tout3_unit_nw").toString());
+				shipDetail.setUnit_gw(o.getBigDecimal("tout3_unit_gw"));
+				shipDetail.setUnit_nw(o.getBigDecimal("tout3_unit_nw"));
 				shipDetail.setWt_um(o.getString("tout3_wt_um"));
 				shipDetail.setPackage_type(o.getString("tout3_package_type"));
 				shipDetail.setId(o.getInt("tout3_lading_qty"));
